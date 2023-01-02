@@ -1,0 +1,2 @@
+# Reversi
+dtu reversi projekt
