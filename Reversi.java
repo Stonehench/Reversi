@@ -37,27 +37,27 @@ public class Reversi extends Application {
 		stage.show();
 		stage.setTitle("Reversi");
 
-		//Construction the 8x8 Grid with 64 buttons
-		for( int row = 0; row < gridSize; row++) {
-			for( int column = 0; column < gridSize; column++){
+		// Construction the 8x8 Grid with 64 buttons
+		for (int row = 0; row < gridSize; row++) {
+			for (int column = 0; column < gridSize; column++) {
 				MyButton myButton = new MyButton(0);
-                myButton.setStyle("-fx-focus-color: transparent");
-				myButton.setPrefSize(butSize,butSize);  //Size of one cell
-                    if (column%2==0 && row%2==0){
-                        myButton.setStyle("-fx-base: #8B4513");
-                    } else {
-                        myButton.setStyle("-fx-base: #D2B48C;");
-                    } if (column%2!=0 && row%2!=0){
-                        myButton.setStyle("-fx-base: #8B4513");
-                    }
-                    
-                
-				root.add(myButton,row,column); 
-				buttons2D[row][column] = myButton; //Add coordinates and accessibility to all buttons.
-                
-            }
-		
-        }
+				myButton.setStyle("-fx-focus-color: transparent");
+				myButton.setPrefSize(butSize, butSize); // Size of one cell
+				if (column % 2 == 0 && row % 2 == 0) {
+					myButton.setStyle("-fx-base: #8B4513");
+				} else {
+					myButton.setStyle("-fx-base: #D2B48C;");
+				}
+				if (column % 2 != 0 && row % 2 != 0) {
+					myButton.setStyle("-fx-base: #8B4513");
+				}
+
+				root.add(myButton, row, column);
+				buttons2D[row][column] = myButton; // Add coordinates and accessibility to all buttons.
+
+			}
+
+		}
 
 		//////////////////////////////////// On-click
 		//////////////////////////////////// function///////////////////////////////////////////
@@ -200,7 +200,8 @@ public class Reversi extends Application {
 			up = 0;
 		}
 
-		// Dernæst tjekkes om modsatte farve er rundt om feltet, hvis ja gåes videre til næste trin
+		// Dernæst tjekkes om modsatte farve er rundt om feltet, hvis ja gåes videre til
+		// næste trin
 		if (cell[right][down].getMyValue() == turn * -1) {
 			if (line(cell, right, down, x, y)) {
 				return true;
@@ -250,6 +251,20 @@ public class Reversi extends Application {
 	public boolean line(MyButton[][] cell, int side_x, int side_y, int old_x, int old_y) {
 		int new_x = side_x + (side_x - old_x);
 		int new_y = side_y + (side_y - old_y);
+
+		if (new_x >= gridSize) {
+			return false;
+		}
+		if (new_x < 0) {
+			return false;
+		}
+		if (new_y >= gridSize) {
+			return false;
+		}
+		if (new_y < 0) {
+			return false;
+		}
+
 		if (cell[new_x][new_y].getMyValue() == turn * -1) {
 			return line(cell, new_x, new_y, side_x, side_y);
 		} else if (cell[new_x][new_y].getMyValue() == turn) {
@@ -259,9 +274,9 @@ public class Reversi extends Application {
 		}
 	}
 
-} 	// End class
+} // End class
 
-	// En klasse så en knap kan tilegnes en int værdi.
+// En klasse så en knap kan tilegnes en int værdi.
 class MyButton extends Button {
 
 	private int MyValue;
