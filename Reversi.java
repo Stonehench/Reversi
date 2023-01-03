@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
-public class Reversi_Niko extends Application {
+public class Reversi extends Application {
 
 	
 	public static void main(String[] args) {
