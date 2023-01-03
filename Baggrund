@@ -1,0 +1,21 @@
+//Construction the 8x8 Grid with 64 buttons
+		for( int row = 0; row < gridSize; row++) {
+			for( int column = 0; column < gridSize; column++){
+				Button myButton = new Button();
+                myButton.setStyle("-fx-focus-color: transparent");
+				myButton.setPrefSize(butSize,butSize);  //Size of one cell
+                    if (column%2==0 && row%2==0){
+                        myButton.setStyle("-fx-base: #8B4513");
+                    } else {
+                        myButton.setStyle("-fx-base: #D2B48C;");
+                    } if (column%2!=0 && row%2!=0){
+                        myButton.setStyle("-fx-base: #8B4513");
+                    }
+                    
+                
+				root.add(myButton,row,column); 
+				buttons2D[row][column] = myButton; //Add coordinates and accessibility to all buttons.
+                
+            }
+		
+        }
