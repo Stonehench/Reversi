@@ -1,0 +1,62 @@
+      
+		// Adds the same function for all buttons on gridPane
+		for (int x = 0; x < gridSize; x++) {
+			for (int y = 0; y < gridSize; y++) {
+				buttons2D[x][y].setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+
+						// FOR DATA TESTING PURPOSE
+						System.out.println("clickcount: " + clickCount);
+						clickedButton = (MyButton) event.getSource();
+
+						int x = GridPane.getColumnIndex(clickedButton);
+						int y = GridPane.getRowIndex(clickedButton);
+						System.out.println("clickposition: (" + x + ", " + y + ")");
+						System.out.println("legal: " + legal(buttons2D, x, y));
+						System.out.println("value " + buttons2D[x][y].getMyValue());
+						System.out.println();
+
+						// Actual Code here:
+						if (legal(buttons2D, x, y) == true) {
+							placePiece(buttons2D[x][y]);
+							clickCount++;
+                            
+						// soundeffects every time you press a button.
+                        Media media = new Media(new File("Reversi-game-sound.wav").toURI().toString());
+                        MediaPlayer mediaPlayer = new MediaPlayer(media);
+                        // playing the music
+                        mediaPlayer.play();
+                        } else {
+                        // soundeffects every time you press a button.
+                         Media media = new Media(new File("emotinal-damage.mp3").toURI().toString());
+                         MediaPlayer mediaPlayer = new MediaPlayer(media);
+                         // playing the music
+                         mediaPlayer.play();
+                        }
+
+
+					} // End click function
+				}); // End Event-handler
+			} // Inner loop end
+		} // Outer loop end
+
+		clickCount++;
+		placePiece(buttons2D[(gridSize / 2) - 1][(gridSize / 2) - 1]);
+		clickCount++;
+		placePiece(buttons2D[(gridSize / 2)][(gridSize / 2) - 1]);
+		clickCount++;
+		placePiece(buttons2D[(gridSize / 2)][(gridSize / 2)]);
+		clickCount++;
+		placePiece(buttons2D[(gridSize / 2) - 1][(gridSize / 2)]);
+		clickCount++;
+
+
+        // soundeffects every time you open the game.
+        Media media = new Media(new File("Intro-Reversi.wav").toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+        // playing the music
+        mediaPlayer.play();
+    
