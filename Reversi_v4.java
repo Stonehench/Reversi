@@ -27,9 +27,9 @@ public class Reversi extends Application {
 	static int gridSize = 8;
 	static int clickCount = 0;
 	static int butSize = windowSize / 8;
-	static int blackValue;
-	static int whiteValue;
 	static int turn;
+	static int black = -1;
+	static int white= 1;
 	
 	static Circle whitePiece = new Circle();
 	static Circle blackPiece = new Circle();
@@ -108,9 +108,10 @@ public class Reversi extends Application {
 						// Checks if the clicked move is legal/illegal
 						if (legal(buttons2D, x, y) == true) {
 							placePiece(buttons2D[x][y]);
+							capturePiece(buttons2D, x,y); // HEER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 							clickCount++;
 							highlight();
-							capturePiece(buttons2D, x,y); // Check if there is a capture
+							
 
 						
 						
@@ -196,46 +197,102 @@ public class Reversi extends Application {
 
 
 	//////////////////////////////Action2: Captures all pieces between placed and ally piece ////////////////////////////////////////////////////////
+	
 	public static void capturePiece(MyButton[][] cellPos, int clickX, int clickY) {
 
-		int right = clickX+1;
-		int left = clickX-1;
-		int up = clickY-1;
-		int down = clickY+1;
-
-		//Replicate: Place a white piece
-		Circle turnWhite = new Circle(butSize / 3 - 1);
-		turnWhite.setFill(Color.WHITE);
-		turnWhite.setStroke(Color.BLACK);
-
-		//Replicate: Place a white piece
-		Circle turnBlack = new Circle(butSize / 3 - 1);
-		turnBlack.setFill(Color.BLACK);
-
-		
-		//White turn (value = 1)
-		if (clickCount % 2 != 0) {turn = 1;} 
-		//Black turn (value = -1)
-		else {turn = -1;}
-		
-		
-		
-		//LEFT
-		if (cellPos[left][clickY].getMyValue() == turn) {
-			
-			
-			cellPos[clickX][clickY].setGraphic(turnWhite); //Places a white piece
-			cellPos[left][clickY].setGraphic(whitePiece); //Captures the black piece
-			cellPos[left][clickY].setMyValue(1);
-			highlight(); //Highlight available after-moves
-		}
-
-	}
+		//Decides who can capture who
+		if (clickCount % 2 != 0) {whiteCapturesB(cellPos, clickX, clickY);} 
+		else {blackCapturesW(cellPos, clickX, clickY);}
+	
+	} //End method 
+	
+					//CapturePiece (1/2) for white
+					public static void whiteCapturesB(MyButton[][] cellPos, int clickX, int clickY) {
+						int right = clickX+1;
+						int left = clickX-1;
+						int up = clickY-1;
+						int down = clickY+1;
+				
+						//Border control
+						if (right >= gridSize) {right = gridSize - 1;}
+						if (left < 0) {left = 0;}
+						if (down >= gridSize) {down = gridSize - 1;}
+						if (up < 0) {up = 0;}
+				
+						//Replicate: Place a white piece
+						Circle turnWhite = new Circle(butSize / 3 - 1);
+						turnWhite.setFill(Color.WHITE);
+						turnWhite.setStroke(Color.BLACK);
+				
+					
+				
+						//LEFT
+						if (cellPos[left][clickY].getMyValue() == black) {
+							cellPos[clickX][clickY].setGraphic(turnWhite); //Places a white piece
+							cellPos[left][clickY].setGraphic(whitePiece); //Captures the black piece
+							cellPos[left][clickY].setMyValue(1);
+							highlight(); //Highlight available after-moves
+						}
+				
+						//RIGHT
+						if (cellPos[right][clickY].getMyValue() == black) {
+							cellPos[clickX][clickY].setGraphic(turnWhite); //Places a white piece
+							cellPos[right][clickY].setGraphic(whitePiece); //Captures the black piece
+							cellPos[right][clickY].setMyValue(1);
+							highlight(); //Highlight available after-moves
+						}
+				
+						//UP
+						if (cellPos[clickX][up].getMyValue() == black) {
+							cellPos[clickX][clickY].setGraphic(turnWhite); //Places a white piece
+							cellPos[clickX][up].setGraphic(whitePiece); //Captures the black piece
+							cellPos[clickX][up].setMyValue(1);
+							highlight(); //Highlight available after-moves
+						}
+				//kommentar her
+						//DOWN
+						if (cellPos[clickX][down].getMyValue() == black) {
+							cellPos[clickX][clickY].setGraphic(turnWhite); //Places a white piece
+							cellPos[clickX][down].setGraphic(whitePiece); //Captures the black piece
+							cellPos[clickX][down].setMyValue(1);
+							highlight(); //Highlight available after-moves
+						}
+						
+						
+					}
+	
+					//CapturePiece (2/2) for black
+						public static void blackCapturesW(MyButton[][] cellPos, int clickX, int clickY) {
+							int right = clickX+1;
+							int left = clickX-1;
+							int up = clickY-1;
+							int down = clickY+1;
+				
+							//Border control
+							if (right >= gridSize) {right = gridSize - 1;}
+							if (left < 0) {left = 0;}
+							if (down >= gridSize) {down = gridSize - 1;}
+							if (up < 0) {up = 0;}
+				
+						
+							//Replicate: Place a black piece
+							Circle turnBlack = new Circle(butSize / 3 - 1);
+							turnBlack.setFill(Color.BLACK);
+				
+				
+							//LEFT
+							if (cellPos[left-1][clickY].getMyValue() == white) {
+								cellPos[clickX][clickY].setGraphic(turnBlack); //Places a white piece
+								cellPos[left][clickY].setGraphic(blackPiece); //Captures the white piece
+								cellPos[left][clickY].setMyValue(-1);
+								highlight(); //Highlight available after-moves
+							}
+				
+						}
 
 	
-	
-	
-	
+	///////////////////////////////////////////////////////// Highlight next available move///////////////////////////////////////////////////////////////////
+
 	//Used for transparent circles to highlight legal moves
 	public static void placePieceTransparent(MyButton[][] cell, int x, int y) {
 
@@ -253,7 +310,7 @@ public class Reversi extends Application {
 
 	}
 	
-	//////////////////////////////////// Peters kode //////////// ///////////////////////////////////////////
+	///////////////////////////////////////////// Rules of Reversi  //////////// ///////////////////////////////////////////
 
 	// Checks if every move is "Legal" else "Illegal" according to "Rules of Reversi"
 	public static boolean legal(MyButton[][] cell, int x, int y) {
@@ -274,10 +331,11 @@ public class Reversi extends Application {
 		int down = y + 1;
 		int up = y - 1;
 
-		// Serves as a border so there wont be an OutOfBounds error
+		
 		if (clickCount % 2 != 0) {turn = 1;} 
 		else {turn = -1;}
 
+		// Serves as a border so there wont be an OutOfBounds error
 		if (right >= gridSize) {right = gridSize - 1;}
 		if (left < 0) {left = 0;}
 		if (down >= gridSize) {down = gridSize - 1;}
