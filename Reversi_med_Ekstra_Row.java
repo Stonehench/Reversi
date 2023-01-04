@@ -40,17 +40,22 @@ public class Reversi_med_Ekstra_Row extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setTitle("Reversi");
-		
-
-		
-
+	
 		// Restart button
-		Button restart = new Button("Restart game");
+		Button restart = new Button("pass");
 		restart.setPrefSize((windowSize / 4), butSize); // Size of the button
 		restart.setStyle("-fx-base: white"); // Button color
 		restart.setStyle("-fx-background-radius: 15"); // Gives button smooth edges
 
-		root.add(restart, gridSize, 7);
+		root.add(restart, gridSize, 6);
+
+		// Pass button
+		Button pass = new Button("Restart game");
+		pass.setPrefSize((windowSize / 4), butSize); // Size of the button
+		pass.setStyle("-fx-base: white"); // Button color
+		pass.setStyle("-fx-background-radius: 15"); // Gives button smooth edges
+
+		root.add(pass, gridSize, 7);
 
 		// Construction the 8x8 Grid with 64 buttons
 		for (int row = 0; row < gridSize; row++) {
