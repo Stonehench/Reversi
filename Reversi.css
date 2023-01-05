@@ -1,0 +1,7 @@
+.button { -fx-focus-color: firebrick; }
+.button{
+    -fx-background-radius: 0;
+    }
+.label {
+    -fx-alignment:center;
+}
