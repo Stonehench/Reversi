@@ -43,6 +43,7 @@ public class Reversi extends Application {
 	static int blackMinut = 0; //new
 	static int whiteTimer = 1; //new
 	static int whiteMinut = 0; //new
+	static boolean soundOn = true;
 
 	static Circle whitePiece = new Circle();
 	static Circle blackPiece = new Circle();
@@ -106,10 +107,10 @@ public class Reversi extends Application {
 
 		//The display of Labels "White score" and "Black score" and all the buttons
 		//Final keyword = cannot be changed by player, only used for display purpose
-		final Label whiteScore = new Label("White Score 2");
-		final Label blackScore = new Label("Black Score 2");
-		timeDisplayWhite = new Label("Time: 00:00");
-		timeDisplayBlack = new Label("Time: 00:00");
+		final Label whiteScore = new Label("White Score: 2");
+		final Label blackScore = new Label("Black Score: 2");
+		timeDisplayWhite = new Label(" Time: 00:00 ");
+		timeDisplayBlack = new Label(" Time: 00:00 ");
 		
 		
 		//Positions of all the side pane buttons and interface
@@ -119,12 +120,22 @@ public class Reversi extends Application {
 				//White scoreBoard
 				whiteScore.setPrefSize(windowSize / 4, butSize);
 				whiteScore.setTextFill(Color.BLACK);
-				whiteScore.setStyle("-fx-background-color: white;");
+				whiteScore.setStyle("-fx-background-color: white;"
+						+ " -fx-border-style: solid;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-border-color: black;"
+						+ "-fx-border-radius: 4;"
+						+ "-fx-background-insets: 2;");
 				whiteScore.setFont(normal);
 				root.add(whiteScore, gridSize, i);
 				
 				//Time display for white
-				timeDisplayWhite.setStyle("-fx-background-color: white;");
+				timeDisplayWhite.setStyle("-fx-background-color: white;"
+						+ " -fx-border-style: solid;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-border-color: black;"
+						+ "-fx-border-radius: 2;"
+						+ "-fx-background-insets: 2;");
 				timeDisplayWhite.setFont(normal);
 				root.add(timeDisplayWhite, gridSize,i-1);
 
@@ -132,12 +143,22 @@ public class Reversi extends Application {
 				//Black scoreBoard
 				blackScore.setPrefSize(windowSize / 4, butSize);
 				blackScore.setTextFill(Color.WHITE);
-				blackScore.setStyle("-fx-background-color: black;");
+				blackScore.setStyle("-fx-background-color: black;"
+						+ " -fx-border-style: solid;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-border-color: black;"
+						+ "-fx-border-radius: 2;"
+						+ "-fx-background-insets: 2;");
 				blackScore.setFont(normal);
 				root.add(blackScore, gridSize, i);
 				
 				//Time display for black
-				timeDisplayBlack.setStyle("-fx-background-color: black;");
+				timeDisplayBlack.setStyle("-fx-background-color: black;"
+						+ " -fx-border-style: solid;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-border-color: black;"
+						+ "-fx-border-radius: 2;"
+						+ "-fx-background-insets: 2;");
 				timeDisplayBlack.setTextFill(Color.WHITE);
 				timeDisplayBlack.setFont(normal);
 				root.add(timeDisplayBlack, gridSize,i+1);
@@ -149,23 +170,51 @@ public class Reversi extends Application {
 				emptySpace.setVisible(false);
 				root.add(emptySpace, gridSize, i);
 
-			} else if (i == gridSize - 2) {
+				
+			} else if (i == 3) {
 				Button pass = new Button("Pass");
-				pass.setPrefSize((windowSize / 4), butSize); // Size of the button
+				pass.setPrefSize((windowSize / 4), butSize/2); // Size of the button
 				pass.setStyle("-fx-base: white;"); // Button color
 				pass.setStyle("-fx-background-radius: 15"); // Gives button smooth edges
 				root.add(pass, gridSize, i);
 
-			} else if (i == gridSize - 1) {
+			} else if (i == gridSize-1) {
 				Button restart = new Button("Restart game");
-				restart.setPrefSize((windowSize / 4), butSize); // Size of the button
+				restart.setPrefSize((windowSize / 4), butSize/2); // Size of the button
 				restart.setStyle("-fx-base: white;"); // Button color
 				restart.setStyle("-fx-background-radius: 15"); // Gives button smooth edges
 				root.add(restart, gridSize, i);
-
 			}
-		}
+			else if (i == gridSize-2) {
+				Button Mute = new Button("Mute SoundFX");
+				Mute.setPrefSize((windowSize / 4), butSize/2); // Size of the button
+				Mute.setStyle("-fx-base: white;"); // Button color
+				Mute.setStyle("-fx-background-radius: 15"); // Gives button smooth edges
+				root.add(Mute, gridSize, i);
+				
+				//On-click action for mute: Mute all sound FX
+				Mute.setOnAction(new EventHandler<ActionEvent>() {
+		        	@Override
+		        	public void handle(ActionEvent event) {
+		        		int clickedMute = 0;
+		        		clickedMute++;
+		        		
+		        		if(clickedMute % 2 != 0) {
+		        			soundOn = false;}
+		        		if(clickedMute % 2 == 0){
+		        			soundOn = true;}
+		        		
+		        		System.out.println("clickedMute" + clickedMute);
+		        		
+		        	}
+		        	});  
+			} //end Mute
+			
+		} // End sidePane 
 
+		
+		
+		
 		
 		
 		
@@ -189,8 +238,8 @@ public class Reversi extends Application {
 							capturePiece(buttons2D, x, y); // Check if there is a capture
 							clickCount++;
 							highlight();
-							whiteScore.setText("White score " + numberOfWhite);
-							blackScore.setText("Black score " + numberOfBlack);
+							whiteScore.setText("White Score: " + numberOfWhite);
+							blackScore.setText("Black Score: " + numberOfBlack);
 
 							//Whites turn
 							if(clickCount%2!=0){ 
@@ -212,14 +261,14 @@ public class Reversi extends Application {
 							Media media = new Media(new File("Reversi-game-sound.wav").toURI().toString());
 							MediaPlayer legalMoveSound = new MediaPlayer(media);
 							legalMoveSound.setVolume(0.1);
-							legalMoveSound.play();
+							if (soundOn) {legalMoveSound.play();}
 
 						} else {
 							// SoundFX every time you make a "Illegal" move.
 							Media media = new Media(new File("Sounds_whoosh.mp3").toURI().toString());
 							MediaPlayer IllegalMoveSound = new MediaPlayer(media);
 							IllegalMoveSound.setVolume(0.1);
-							IllegalMoveSound.play();
+							if (soundOn) {IllegalMoveSound.play();}
 
 						} // End if-else
 
@@ -272,8 +321,6 @@ public class Reversi extends Application {
 		intro.setVolume(0.1);
 		intro.play();
 
-
-
 		///////////////////////////////////// Timeline for time used  /////////////////////////////////////
 
 		//Create a TimeLine for white
@@ -285,7 +332,7 @@ public class Reversi extends Application {
 		whiteTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate), 
 				event -> {
 					//Displays and updates time
-					timeDisplayWhite.textProperty().bind(Bindings.format("Time: %02d:%02d",whiteMinut ,whiteTimer++));
+					timeDisplayWhite.textProperty().bind(Bindings.format(" Time: %02d:%02d ",whiteMinut ,whiteTimer++));
 					//Every 60 second, store 1 minute
 					if (whiteTimer % 60 == 0) {
 						whiteMinut++;
@@ -301,7 +348,7 @@ public class Reversi extends Application {
 				event -> {
 					
 					//Displays and updates time
-					timeDisplayBlack.textProperty().bind(Bindings.format("Time: %02d:%02d",blackMinut, blackTimer++));
+					timeDisplayBlack.textProperty().bind(Bindings.format(" Time: %02d:%02d ",blackMinut, blackTimer++));
 					//Every 60 second, store 1 minute
 					if (blackTimer % 60 == 0) {
 						blackMinut++;
