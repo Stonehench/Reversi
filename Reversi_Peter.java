@@ -5,6 +5,8 @@ import java.io.File;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,50 +21,76 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class Reversi_Peter extends Application {
-
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	///////////////////////// Banen kan være mellem 6 og 12 i gridsize :D
+
 	// Global Instance variables her:
 	static int availableMoves = 0;
 	static int gridSize = 8;
-	static int windowSize = gridSize * 75;
+	static int windowSize = 600;
 	static int clickCount = 0;
-	static int butSize = windowSize / 8;
+	static int butSize = windowSize / gridSize;
 	static int blackValue;
 	static int whiteValue;
 	static int numberOfWhite;
 	static int numberOfBlack;
 	static int turn;
 
-	static Circle whitePiece = new Circle();
-	static Circle blackPiece = new Circle();
+	static Circle whitePiece;
+	static Circle blackPiece;
 	static String playerTurn;
 	static MyButton clickedButton;
-	static MyButton[][] buttons2D = new MyButton[8][8];
+	static MyButton[][] buttons2D = new MyButton[gridSize][gridSize];
+	Font normal = new Font("Verdana", 15);
+	Font bold = new Font("Verdana", 17);
+	Label whiteScore = new Label("White Score 2");
+	Label blackScore = new Label("Black Score 2");
+	Button pass = new Button("Pass");
+	Button restart = new Button("Restart game");
+	GridPane root = new GridPane();
+	Scene scene = new Scene(root, windowSize + (windowSize / 4), windowSize);
 
-	Font normal = new Font("Verdana",15);
-	Font bold = new Font("Verdana",17);
+	// Class Constructor
+	public Reversi_Peter() {
+		// Code to make the fonts look correct
+		normal = Font.font(normal.getFamily(), FontWeight.NORMAL, normal.getSize());
+		bold = Font.font(bold.getFamily(), FontWeight.BOLD, bold.getSize());
 
-	
-
-	@Override
-	public void start(Stage primaryStage) {
-
-		// Constructs pane
-		GridPane root = new GridPane();
-		root.setStyle("-fx-background-color: #33CC66;"); // Sets backgground color
-
-		// Size of Window
-		Scene scene = new Scene(root, windowSize + (windowSize / 4), windowSize);
-
-		// Makes CSS and sidepane possible
-		scene.getStylesheets().add(getClass().getResource("Reversi.css").toExternalForm());
-		primaryStage.setScene(scene);
-		primaryStage.show();
-		primaryStage.setTitle("Reversi");
-
+		for (int i = 0; i < gridSize; i++) {
+			if (i == 1) {
+				whiteScore.setPrefSize(windowSize / 4, butSize);
+				whiteScore.setTextFill(Color.BLACK);
+				whiteScore.setStyle("-fx-background-color: white;");
+				whiteScore.setFont(normal);
+				root.add(whiteScore, gridSize, i);
+			} else if (i == 3) {
+				blackScore.setPrefSize(windowSize / 4, butSize);
+				blackScore.setTextFill(Color.WHITE);
+				blackScore.setStyle("-fx-background-color: black;");
+				blackScore.setFont(normal);
+				root.add(blackScore, gridSize, i);
+			} else if (i == gridSize - 2) {
+				pass.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the button
+				pass.setStyle("-fx-base: white;"); // Button color
+				pass.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
+				root.add(pass, gridSize, i);
+				GridPane.setConstraints(pass, gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
+			} else if (i == gridSize - 1) {
+				restart.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the																						// button
+				restart.setStyle("-fx-base: white;"); // Button color
+				restart.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
+				root.add(restart, gridSize, i);
+				GridPane.setConstraints(restart, gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
+			} else if (i >= 0) {
+				MyButton emptySpace = new MyButton(0);
+				emptySpace.setPrefSize(windowSize / 4, butSize);
+				emptySpace.setVisible(false);
+				root.add(emptySpace, gridSize, i);
+			}
+		}
 		// Construction the 8x8 Grid with 64 buttons
 		for (int row = 0; row < gridSize; row++) {
 			for (int column = 0; column < gridSize; column++) {
@@ -83,53 +111,6 @@ public class Reversi_Peter extends Application {
 				buttons2D[row][column] = myButton; // Add coordinates and accessibility to all buttons.
 			}
 
-		}
-		
-		Label whiteScore = new Label("White Score 2");
-		Label blackScore = new Label("Black Score 2");
-
-		// Code to make the fonts look correct
-		normal = Font.font(normal.getFamily(),FontWeight.NORMAL, normal.getSize());
-		bold = Font.font(bold.getFamily(), FontWeight.BOLD, bold.getSize());
-
-		for (int i = 0; i < gridSize; i++) {
-			if (i == 1) {
-				whiteScore.setPrefSize(windowSize / 4, butSize);
-				whiteScore.setTextFill(Color.BLACK);
-				whiteScore.setStyle("-fx-background-color: white;");
-				whiteScore.setFont(normal);
-
-				root.add(whiteScore, gridSize, i);
-
-			} else if (i == 3) {
-				blackScore.setPrefSize(windowSize / 4, butSize);
-				blackScore.setTextFill(Color.WHITE);
-				blackScore.setStyle("-fx-background-color: black;");
-				blackScore.setFont(normal);
-
-				root.add(blackScore, gridSize, i);
-
-			} else if (i == 0 || i == 2 || i == 4 || i == 5) {
-				MyButton emptySpace = new MyButton(0);
-				emptySpace.setPrefSize(windowSize / 4, butSize);
-				emptySpace.setVisible(false);
-				root.add(emptySpace, gridSize, i);
-
-			} else if (i == gridSize - 2) {
-				Button pass = new Button("Pass");
-				pass.setPrefSize((windowSize / 4), butSize); // Size of the button
-				pass.setStyle("-fx-base: white;"); // Button color
-				pass.setStyle("-fx-background-radius: 15"); // Gives button smooth edges
-				root.add(pass, gridSize, i);
-
-			} else if (i == gridSize - 1) {
-				Button restart = new Button("Restart game");
-				restart.setPrefSize((windowSize / 4), butSize); // Size of the button
-				restart.setStyle("-fx-base: white;"); // Button color
-				restart.setStyle("-fx-background-radius: 15"); // Gives button smooth edges
-				root.add(restart, gridSize, i);
-
-			}
 		}
 
 		//////////////////////////////////// On-click
@@ -156,12 +137,12 @@ public class Reversi_Peter extends Application {
 							whiteScore.setText("White score " + numberOfWhite);
 							blackScore.setText("Black score " + numberOfBlack);
 
-							 // Showcases whos turn it is
-							if(clickCount%2!=0){
+							// Showcases whos turn it is
+							if (clickCount % 2 != 0) {
 								whiteScore.setFont(bold);
 								blackScore.setFont(normal);
 
-							}else {
+							} else {
 								whiteScore.setFont(normal);
 								blackScore.setFont(bold);
 							}
@@ -195,6 +176,21 @@ public class Reversi_Peter extends Application {
 				}); // End Event-handler
 			} // Inner loop end
 		} // Outer loop end
+	}
+
+	// Stage setup
+	@Override
+	public void start(Stage primaryStage) {
+
+		// Constructs pane
+		root.setStyle("-fx-background-color: #33CC66;"); // Sets backgground color
+
+		// Makes CSS and sidepane possible
+		scene.getStylesheets().add(getClass().getResource("Reversi.css").toExternalForm());
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		primaryStage.setTitle("Reversi");
+		primaryStage.setResizable(false);
 
 		// Constructs the default 4 pieces in the center of Board
 		clickCount++;
@@ -208,12 +204,12 @@ public class Reversi_Peter extends Application {
 		clickCount++;
 		highlight();
 
-		 // Showcases whos turn it is
-		if(clickCount%2!=0){
+		// Showcases whos turn it is
+		if (clickCount % 2 != 0) {
 			whiteScore.setFont(bold);
 			blackScore.setFont(normal);
 
-		}else {
+		} else {
 			whiteScore.setFont(normal);
 			blackScore.setFont(bold);
 		}
@@ -231,12 +227,12 @@ public class Reversi_Peter extends Application {
 	public static void placePiece(MyButton clickedButton) {
 
 		// Design of the WHITE piece
-		whitePiece = new Circle(butSize / 3 - 1);
+		whitePiece = new Circle(butSize / 3 - gridSize / 7.5);
 		whitePiece.setFill(Color.WHITE);
 		whitePiece.setStroke(Color.BLACK);
 
 		// Design of the BLACK piece
-		blackPiece = new Circle(butSize / 3 - 2);
+		blackPiece = new Circle(butSize / 3 - (gridSize / 6) + 1);
 		blackPiece.setFill(Color.BLACK);
 
 		// Players turn: White always starts, then Blacks turn. Repeat.
@@ -257,19 +253,16 @@ public class Reversi_Peter extends Application {
 
 		double centerX = butSize / 2;
 		double centerY = butSize / 2;
-		double radiusX = butSize / 3.4;
-		double radiusY = butSize / 3.4;
+		double radiusX = (butSize / 6) + butSize / gridSize;
+		double radiusY = (butSize / 6) + butSize / gridSize;
 
 		Ellipse blackRing = new Ellipse(centerX, centerY, radiusX, radiusY);
 		blackRing.setFill(null);
 		blackRing.setStroke(Color.GRAY);
-		blackRing.setStrokeWidth(butSize / 7.5);
+		blackRing.setStrokeWidth(butSize / 8);
 
 		cell[x][y].setGraphic(blackRing);
 	}
-
-	//////////////////////////////////// Peters kode ////////////
-	//////////////////////////////////// ///////////////////////////////////////////
 
 	// Checks if every move is "Legal" else "Illegal" according to "Rules of
 	// Reversi"
@@ -384,6 +377,7 @@ public class Reversi_Peter extends Application {
 		}
 	}
 
+	// Starts the process of capturing a piece
 	public static void capturePiece(MyButton[][] cell, int x, int y) {
 
 		// Coordinates E/W/S/N of the piece placed
