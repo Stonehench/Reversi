@@ -22,6 +22,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
@@ -163,24 +166,25 @@ public class Reversi_Peter extends Application {
 			} else if (i == gridSize - 2) {
 
 				// Mute button
-				Button Mute = new Button("SoundFX: on");
-				Mute.setPrefSize((windowSize / 4), butSize / 2); // Size of the button
-				Mute.setStyle("-fx-base: white;"); // Button color
-				Mute.setStyle("-fx-background-radius: 15"); // Gives button smooth edges
-				root.add(Mute, gridSize, i);
+				Button mute = new Button("SoundFX: on");
+				mute.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the button
+				mute.setStyle("-fx-base: white;"); // Button color
+				mute.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
+				root.add(mute, gridSize, i);
+				GridPane.setConstraints(mute, gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
 
 				// On-click action for mute: Mute all sound FX
-				Mute.setOnAction(new EventHandler<ActionEvent>() {
+				mute.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent event) {
 						clickedMute++;
 
 						if (clickedMute % 2 != 0) {
 							soundOn = false;
-							Mute.setText("SoundFX: off");
+							mute.setText("SoundFX: off");
 						} else {
 							soundOn = true;
-							Mute.setText("SoundFX: on");
+							mute.setText("SoundFX: on");
 
 						}
 					}
@@ -454,12 +458,18 @@ public class Reversi_Peter extends Application {
 		// Design of the WHITE piece
 		whitePiece = new Circle(butSize / 3 - gridSize / 7.5);
 		whitePiece.setFill(Color.WHITE);
-		whitePiece.setStroke(Color.BLACK);
+		whitePiece.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
+		LinearGradient fadeWhiteGrey = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+				new Stop(0, Color.WHITE), new Stop(1, Color.GREY));
+		whitePiece.setFill(fadeWhiteGrey);
 
 		// Design of the BLACK piece
 		blackPiece = new Circle(butSize / 3 - (gridSize / 6) + 1);
-		blackPiece.setFill(Color.BLACK);
+		blackPiece.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
 		blackPiece.setStroke(Color.BLACK);
+		LinearGradient fadeBlackGrey = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+				new Stop(1, Color.DIMGREY), new Stop(0.5, Color.BLACK));
+		blackPiece.setFill(fadeBlackGrey);
 
 		// Adjust the TransitionSpeed
 		int tSpeed = 1;
@@ -470,7 +480,6 @@ public class Reversi_Peter extends Application {
 			// Animation of white capture black pieces
 			if (clickedButton.getMyValue() != 0) {
 				FillTransition blackToWhite = new FillTransition(Duration.seconds(tSpeed), whitePiece);
-				blackToWhite.setFromValue(Color.BLACK);
 				blackToWhite.setToValue(Color.WHITE);
 				blackToWhite.setCycleCount(1);
 				blackToWhite.play();
@@ -485,7 +494,6 @@ public class Reversi_Peter extends Application {
 			// Animation of black capture white pieces
 			if (clickedButton.getMyValue() != 0) {
 				FillTransition whiteToBlack = new FillTransition(Duration.seconds(tSpeed), blackPiece);
-				whiteToBlack.setFromValue(Color.WHITE);
 				whiteToBlack.setToValue(Color.BLACK);
 				whiteToBlack.setCycleCount(1);
 				whiteToBlack.play();
@@ -811,7 +819,7 @@ public class Reversi_Peter extends Application {
 	public static void winner(String winner, Stage winStage) {
 
 		winStage.initModality(Modality.APPLICATION_MODAL);
-		winStage.setTitle("Pop-up Window");
+		winStage.setTitle("Game over");
 		winStage.setMinWidth(400);
 		winStage.setMinHeight(200);
 
@@ -833,12 +841,12 @@ public class Reversi_Peter extends Application {
 		closeButton.setOnAction(event -> {
 			if (winner.equals("BLACK")) {
 				blackWinCounter2++;
-			} else if (winner.equals("WHITE")){
+			} else if (winner.equals("WHITE")) {
 				whiteWinCounter2++;
 			}
 			restartGame(buttons2D);
 			winStage.close();
-			});
+		});
 
 		Scene scene = new Scene(layout);
 		winStage.setScene(scene);
@@ -849,38 +857,40 @@ public class Reversi_Peter extends Application {
 	public static void restartGame(MyButton[][] cell) {
 		gameCounter++;
 
-				clickCount = 0;
+		clickCount = 0;
 
-				// Reset the timer
-				blackValue = 2;
-				whiteValue = 2;
-				blackTimer = 0; // new
-				blackMinut = 0; // new
-				whiteTimer = 0; // new
-				whiteMinut = 0; // new
+		// Reset the timer
+		blackValue = 2;
+		whiteValue = 2;
+		blackTimer = 0; // new
+		blackMinut = 0; // new
+		whiteTimer = 0; // new
+		whiteMinut = 0; // new
 
-				// Reset time display
-				whiteTimeLine.stop();
-				blackTimeLine.stop();
-				timeDisplayWhite.textProperty().unbind();
-				timeDisplayBlack.textProperty().unbind();
-				timeDisplayWhite.setText(" Time: 00:00 ");
-				timeDisplayBlack.setText(" Time: 00:00 ");
+		// Reset time display
+		whiteTimeLine.stop();
+		blackTimeLine.stop();
+		timeDisplayWhite.textProperty().unbind();
+		timeDisplayBlack.textProperty().unbind();
+		timeDisplayWhite.setText(" Time: 00:00 ");
+		timeDisplayBlack.setText(" Time: 00:00 ");
 
-				// Update GUI to reflect reset game state
-				blackScore.setText("Black Score: 2");
-				whiteScore.setText("White Score: 2");
-				for (int row = 0; row < gridSize; row++) {
-					for (int column = 0; column < gridSize; column++) {
+		// Update GUI to reflect reset game state
+		blackScore.setText("Black Score: 2");
+		whiteScore.setText("White Score: 2");
+		for (int row = 0; row < gridSize; row++) {
+			for (int column = 0; column < gridSize; column++) {
 
-						cell[row][column].setGraphic(null); // Add coordinates and accessibility to all buttons.
-						cell[row][column].setMyValue(0);
-					}
-				}
-				if (gameCounter % 2 != 0) {
-					clickCount++;
-				}
-				startFour();
+				cell[row][column].setGraphic(null); // Add coordinates and accessibility to all buttons.
+				cell[row][column].setMyValue(0);
+			}
+		}
+		if (gameCounter % 2 != 0) {
+			clickCount++;
+		}
+		startFour();
+		whiteWinCounter.setText("" + whiteWinCounter2);
+		blackWinCounter.setText("" + blackWinCounter2);
 	}
 
 } // End class
