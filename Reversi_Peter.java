@@ -74,7 +74,8 @@ public class Reversi_Peter extends Application {
 	static Font numberFont = new Font("Verdana", 20);
 	static Label whiteScore = new Label("White Score 2");
 	static Label blackScore = new Label("Black Score 2");
-	static Circle circle = new Circle();
+	static Circle whiteCircle = new Circle(butSize/3);
+	static Circle blackCircle = new Circle(butSize/3);
 	static Text whiteWinCounter = new Text("" + whiteWinCounter2);
 	static Text blackWinCounter = new Text("" + blackWinCounter2);
 	static Button pass = new Button("Pass");
@@ -204,19 +205,25 @@ public class Reversi_Peter extends Application {
 		for (int i = 0; i < gridSize; i++) {
 			if (i == 1) {
 				whiteWinCounter.setBoundsType(TextBoundsType.VISUAL);
-				StackPane stack = new StackPane();
-				stack.getChildren().addAll(circle, whiteWinCounter);
+				whiteCircle.setFill(Color.WHITE);
+				whiteCircle.setStroke(Color.BLACK);
+				StackPane whiteCircleNText = new StackPane();
+				whiteCircleNText.getChildren().addAll(whiteCircle, whiteWinCounter);
 				whiteWinCounter.setFill(Color.BLACK);
 				whiteWinCounter.setStyle("-fx-background-color: white;");
 				whiteWinCounter.setFont(numberFont);
-				root.add(whiteWinCounter, gridSize + 1, i);
-				GridPane.setConstraints(whiteWinCounter, gridSize + 1, i, 1, 1, HPos.CENTER, VPos.CENTER);
+				root.add(whiteCircleNText, gridSize + 1, i);
+				GridPane.setConstraints(whiteCircleNText, gridSize + 1, i, 1, 1, HPos.CENTER, VPos.CENTER);
 			} else if (i == 3) {
+				whiteWinCounter.setBoundsType(TextBoundsType.VISUAL);
+				blackCircle.setFill(Color.BLACK);
+				StackPane blackCircleNText = new StackPane();
+				blackCircleNText.getChildren().addAll(blackCircle, blackWinCounter);
 				blackWinCounter.setFill(Color.WHITE);
 				blackWinCounter.setStyle("-fx-background-color: black;");
 				blackWinCounter.setFont(numberFont);
-				root.add(blackWinCounter, gridSize + 1, i);
-				GridPane.setConstraints(blackWinCounter, gridSize + 1, i, 1, 1, HPos.CENTER, VPos.CENTER);
+				root.add(blackCircleNText, gridSize + 1, i);
+				GridPane.setConstraints(blackCircleNText, gridSize + 1, i, 1, 1, HPos.CENTER, VPos.CENTER);
 			} else if (i >= 0) {
 				MyButton emptySpace = new MyButton(0);
 				emptySpace.setPrefSize(windowSize / 4, butSize);
