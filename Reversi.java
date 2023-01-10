@@ -1,0 +1,1224 @@
+
+
+import javafx.animation.ScaleTransition;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import javafx.animation.FillTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+public class Reversi extends Application {
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+	///////////////////////// Banen kan være mellem 6 og 12 i gridsize :D
+
+	// Global Instance variables her:
+	static int gameCounter = 0;
+	static int availableMoves = 0;
+	static int fullBoard;
+	static int gridSize = 8;
+	static int windowSize = 600;
+	static int clickCount = 0;
+	static int butSize = windowSize / gridSize;
+	static int numberOfWhite;
+	static int numberOfBlack;
+	static int turn;
+	static int blackTimer = 1;
+	static int blackMinut = 0;
+	static int whiteTimer = 1;
+	static int whiteMinut = 0;
+	static int clickedMute;
+	static int whiteWinCounter2 = 0;
+	static int blackWinCounter2 = 0;
+	static int blackValue;
+	static int whiteValue;
+	static boolean soundOn = true;
+
+	static Circle whitePiece;
+	static Circle blackPiece;
+	static String playerTurn;
+	static MyButton clickedButton;
+	static MyButton[][] buttons2D = new MyButton[gridSize][gridSize];
+	static Font normal = new Font("Verdana", 15);
+	static Font bold = new Font("Verdana", 17);
+	static Font numberFont = new Font("Verdana", 20);
+	static Label whiteScore = new Label("White Score 2");
+	static Label blackScore = new Label("Black Score 2");
+	static Circle whiteCircle = new Circle(butSize/3);
+	static Circle blackCircle = new Circle(butSize/3);
+	static Text whiteWinCounter = new Text("" + whiteWinCounter2);
+	static Text blackWinCounter = new Text("" + blackWinCounter2);
+	static Button pass = new Button("Pass");
+	static Button restart = new Button("Restart game");
+	static Button Back = new Button("Back");
+	static GridPane root = new GridPane();
+	static Scene scene = new Scene(root, windowSize + (windowSize / 2), windowSize);
+	static Timeline whiteTimeLine = new Timeline();
+	static Timeline blackTimeLine = new Timeline();
+	static Label timeDisplayWhite = new Label();
+	static Label timeDisplayBlack = new Label();
+	static Media media = new Media(new File("Intro-Reversi.wav").toURI().toString());
+	static MediaPlayer intro = new MediaPlayer(media);
+	static MediaPlayer legalMoveSound = new MediaPlayer(media);
+	static MediaPlayer IllegalMoveSound = new MediaPlayer(media);
+
+	// Class Constructor
+	public Reversi() {
+		// Code to make the fonts look correct
+		normal = Font.font(normal.getFamily(), FontWeight.NORMAL, normal.getSize());
+		bold = Font.font(bold.getFamily(), FontWeight.BOLD, bold.getSize());
+
+		// The display of Labels "White score" and "Black score" and all the buttons
+		timeDisplayWhite = new Label(" Time: 00:00 ");
+		timeDisplayBlack = new Label(" Time: 00:00 ");
+
+		// Creates the first column of the menu on the right
+		for (int i = 0; i < gridSize; i++) {
+			if (i == 1) {
+				whiteScore.setPrefSize(windowSize / 4, butSize);
+				whiteScore.setTextFill(Color.BLACK);
+				whiteScore.setStyle("-fx-background-color: white;"
+						+ " -fx-border-style: solid;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-border-color: black;"
+						+ "-fx-border-radius: 4;"
+						+ "-fx-background-insets: 2;");
+				whiteScore.setFont(normal);
+				root.add(whiteScore, gridSize, i);
+
+				// Time display for white
+				timeDisplayWhite.setStyle("-fx-background-color: white;"
+						+ " -fx-border-style: solid;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-border-color: black;"
+						+ "-fx-border-radius: 2;"
+						+ "-fx-background-insets: 2;");
+				timeDisplayWhite.setFont(normal);
+				root.add(timeDisplayWhite, gridSize, i - 1);
+
+			} else if (i == 3) {
+				blackScore.setPrefSize(windowSize / 4, butSize);
+				blackScore.setTextFill(Color.WHITE);
+				blackScore.setStyle("-fx-background-color: black;"
+						+ " -fx-border-style: solid;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-border-color: black;"
+						+ "-fx-border-radius: 2;"
+						+ "-fx-background-insets: 2;");
+				blackScore.setFont(normal);
+				root.add(blackScore, gridSize, i);
+
+				// Time display for black
+				timeDisplayBlack.setStyle("-fx-background-color: black;"
+						+ " -fx-border-style: solid;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-border-color: black;"
+						+ "-fx-border-radius: 2;"
+						+ "-fx-background-insets: 2;");
+				timeDisplayBlack.setTextFill(Color.WHITE);
+				timeDisplayBlack.setFont(normal);
+				root.add(timeDisplayBlack, gridSize, i + 1);
+
+			} else if (i == 2) {
+				pass.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the button
+				pass.setStyle("-fx-base: white;"); // Button color
+				pass.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
+				pass.setDisable(true);
+				root.add(pass, gridSize, i);
+				GridPane.setConstraints(pass, gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
+			} else if (i == gridSize - 1) {
+
+				// Restart button
+				restart.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the //
+																										// // button
+				restart.setStyle("-fx-base: white;"); // Button color
+				restart.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
+				root.add(restart, gridSize, i);
+				GridPane.setConstraints(restart, gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
+			} else if (i == gridSize - 2) {
+
+				// Mute button
+				Button mute = new Button("SoundFX: on");
+				mute.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the button
+				mute.setStyle("-fx-base: white;"); // Button color
+				mute.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
+				root.add(mute, gridSize, i);
+				GridPane.setConstraints(mute, gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
+
+				// On-click action for mute: Mute all sound FX
+				mute.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						clickedMute++;
+
+						if (clickedMute % 2 != 0) {
+							soundOn = false;
+							mute.setText("SoundFX: off");
+						} else {
+							soundOn = true;
+							mute.setText("SoundFX: on");
+						}
+					}
+				});
+			} // end Mute
+			else if (i >= 0) {
+				MyButton emptySpace = new MyButton(0);
+				emptySpace.setPrefSize(windowSize / 4, butSize);
+				emptySpace.setVisible(false);
+				root.add(emptySpace, gridSize, i);
+			}
+				/*Button backButton = new Button();
+				backButton.setText("Back to Menu");
+				backButton.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the button//
+																										
+				backButton.setStyle("-fx-base: white;"); // Button color
+				backButton.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
+				root.add(backButton, gridSize+1, i);
+				GridPane.setConstraints(backButton, gridSize+1, i, 1, 1, HPos.CENTER, VPos.CENTER);
+				
+				backButton.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						//.show();
+						//Reversi.close();
+					}
+				});*/
+				
+
+			
+
+		} // sidePane MENU buttons end
+
+		// Creates the second menu on the right
+
+		for (int i = 0; i < gridSize; i++) {
+			if (i == 1) {
+				whiteWinCounter.setBoundsType(TextBoundsType.VISUAL);
+				whiteCircle.setFill(Color.WHITE);
+				whiteCircle.setStroke(Color.BLACK);
+				StackPane whiteCircleNText = new StackPane();
+				whiteCircleNText.getChildren().addAll(whiteCircle, whiteWinCounter);
+				whiteWinCounter.setFill(Color.BLACK);
+				whiteWinCounter.setStyle("-fx-background-color: white;");
+				whiteWinCounter.setFont(numberFont);
+				root.add(whiteCircleNText, gridSize + 1, i);
+				GridPane.setConstraints(whiteCircleNText, gridSize + 1, i, 1, 1, HPos.CENTER, VPos.CENTER);
+			} else if (i == 3) {
+				whiteWinCounter.setBoundsType(TextBoundsType.VISUAL);
+				blackCircle.setFill(Color.BLACK);
+				StackPane blackCircleNText = new StackPane();
+				blackCircleNText.getChildren().addAll(blackCircle, blackWinCounter);
+				blackWinCounter.setFill(Color.WHITE);
+				blackWinCounter.setStyle("-fx-background-color: black;");
+				blackWinCounter.setFont(numberFont);
+				root.add(blackCircleNText, gridSize + 1, i);
+				GridPane.setConstraints(blackCircleNText, gridSize + 1, i, 1, 1, HPos.CENTER, VPos.CENTER);
+			} else if (i >= 0) {
+				MyButton emptySpace = new MyButton(0);
+				emptySpace.setPrefSize(windowSize / 4, butSize);
+				emptySpace.setVisible(false);
+				root.add(emptySpace, gridSize + 1, i);
+			}
+		}
+
+		// Construction the 8x8 Grid with 64 buttons
+		for (int row = 0; row < gridSize; row++) {
+			for (int column = 0; column < gridSize; column++) {
+				MyButton myButton = new MyButton(0);
+				myButton.setPrefSize(butSize, butSize); // Size of one cell
+
+				// Background
+				if (column % 2 == 0 && row % 2 == 0) {
+					myButton.setStyle("-fx-base: #8B4513");
+				} else {
+					myButton.setStyle("-fx-base: #D2B48C;");
+				}
+				if (column % 2 != 0 && row % 2 != 0) {
+					myButton.setStyle("-fx-base: #8B4513");
+				}
+
+				root.add(myButton, row, column);
+				buttons2D[row][column] = myButton; // Add coordinates and accessibility to all buttons.
+			}
+		}
+
+		//////////////////////////////////// On-click
+		//////////////////////////////////// function///////////////////////////////////////////
+
+		// Adds all the functionality for when a button is clicked
+		for (int x = 0; x < gridSize; x++) {
+			for (int y = 0; y < gridSize; y++) {
+				buttons2D[x][y].setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						clickedButton = (MyButton) event.getSource();
+						int x = GridPane.getColumnIndex(clickedButton);
+						int y = GridPane.getRowIndex(clickedButton);
+
+						// Checks if the clicked move is legal/illegal
+						if (legal(buttons2D, x, y) == true) {
+
+							placePiece(buttons2D[x][y]);
+							capturePiece(buttons2D, x, y); // Check if there is a capture
+							clickCount++;
+							highlight();
+							whiteScore.setText("White score " + numberOfWhite);
+							blackScore.setText("Black score " + numberOfBlack);
+							focusPlayer();
+
+							// Whites turn
+							if (clickCount % 2 != 0) {
+								whiteScore.setFont(bold);
+								blackScore.setFont(normal);
+								timeDisplayWhite.setFont(bold);
+								timeDisplayBlack.setFont(normal);
+
+								System.out.println("White counter started: ");
+								whiteTimeLine.play();
+								blackTimeLine.stop();
+
+							}
+							// Blacks turn
+							else {
+								whiteScore.setFont(normal);
+								blackScore.setFont(bold);
+								timeDisplayWhite.setFont(normal);
+								timeDisplayBlack.setFont(bold);
+
+								System.out.println("Black counter started: ");
+								blackTimeLine.play();
+								whiteTimeLine.stop();
+
+							}
+
+							// SoundFX every time you make a "Legal" move.
+							media = new Media(new File("Reversi-game-sound.wav").toURI().toString());
+							legalMoveSound = new MediaPlayer(media);
+							legalMoveSound.setVolume(0.1);
+							if (soundOn) {
+								legalMoveSound.play();
+							}
+
+						} else {
+							// SoundFX every time you make a "Illegal" move.
+							media = new Media(new File("Sounds_whoosh.mp3").toURI().toString());
+							IllegalMoveSound = new MediaPlayer(media);
+							IllegalMoveSound.setVolume(0.1);
+							if (soundOn) {
+								IllegalMoveSound.play();
+							}
+
+						} // End if-else
+
+						// FOR DATA TESTING PURPOSE
+						System.out.println("----------------------");
+						System.out.println("clickcount: " + clickCount);
+						System.out.println("clickposition: (" + x + ", " + y + ")");
+						System.out.println("Player: " + playerTurn);
+						System.out.println("value " + buttons2D[x][y].getMyValue());
+						System.out.println("turn: " + turn);
+						System.out.println("legal: " + legal(buttons2D, x, y));
+						System.out.println("");
+
+					} // End click function
+				}); // End Event-handler
+			} // Inner loop end
+		} // Outer loop end
+
+		// Pass button
+		pass.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				// Skip the current player's turn
+				if (turn == -1) {
+					clickCount++;
+					playerTurn = "white";
+					highlight();
+					focusPlayer();
+				} else {
+					playerTurn = "black";
+					clickCount++;
+					highlight();
+					focusPlayer();
+				}
+			}
+		});
+
+		// Restart button
+		restart.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				restartGame(buttons2D);
+			}
+		});
+
+	}
+
+	// Stage setup
+	@Override
+	public void start(Stage primaryStage) throws MalformedURLException{
+
+        Image image = new Image(new File(
+            "lib/billeder/reversi-game.jpg").toURI().toURL().toString());
+        ImageView imageView = new ImageView(image);
+        Pane pane = new Pane();
+        pane.getChildren().add(imageView);
+
+        // Create a new stage
+        Stage menuStage = new Stage();
+        menuStage.setTitle("Menu");
+
+
+        // Set the scene for the stage
+        Scene menuScene = new Scene(pane, 1200, 675);
+        menuStage.setScene(menuScene);
+		menuStage.setResizable(false);
+        menuStage.show();
+
+
+
+
+		
+        //Button to the scene
+        Button startGame = new Button();
+		ScaleTransition startButten = new ScaleTransition(Duration.millis(300), startGame);
+			startButten.setFromX(1);
+			startButten.setFromY(1);
+			startButten.setToX(1.1);
+			startButten.setToY(1.1);
+			
+		ScaleTransition startShrink = new ScaleTransition(Duration.millis(200), startGame);
+		startShrink.setFromX(1.1);
+		startShrink.setFromY(1.1);
+		startShrink.setToX(1);
+		startShrink.setToY(1);
+
+		startGame.setOnMouseEntered(e -> startButten.playFromStart());
+		startGame.setOnMouseExited(e -> startShrink.playFromStart());
+	
+        startGame.setPrefSize(300, 60);
+        startGame.setText("Start Game");
+        pane.getChildren().add(startGame);
+		startGame.setLayoutX(pane.getWidth() / 2-150);
+		startGame.setLayoutY(pane.getHeight() / 2);
+		startGame.setStyle("-fx-background-color: #33CC66;"
+						+ "-fx-border-color: black;"
+						+ "-fx-border-radius: 50;"
+						+ " -fx-background-radius: 50;"
+						+ " -fx-text-fill : black;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-font-size : 30px");
+
+
+		Button rules = new Button();
+		ScaleTransition rulesButten = new ScaleTransition(Duration.millis(300), rules);
+			rulesButten.setFromX(1);
+			rulesButten.setFromY(1);
+			rulesButten.setToX(1.1);
+			rulesButten.setToY(1.1);
+			
+		ScaleTransition rulesShrink = new ScaleTransition(Duration.millis(200), rules);
+		rulesShrink.setFromX(1.1);
+		rulesShrink.setFromY(1.1);
+		rulesShrink.setToX(1);
+		rulesShrink.setToY(1);
+
+		rules.setOnMouseEntered(e -> rulesButten.playFromStart());
+		rules.setOnMouseExited(e -> rulesShrink.playFromStart());
+
+		rules.setPrefSize(150, 25);
+        rules.setText("Game rules");
+        pane.getChildren().add(rules);
+		rules.setLayoutX(pane.getWidth() / 2-75);
+		rules.setLayoutY(pane.getHeight() / 2+75);
+		rules.setStyle("-fx-background-color: #33CC66;"
+							+ "-fx-border-color: black;"
+							+ "-fx-border-radius: 50;"
+							+ " -fx-background-radius: 50;"
+							+ " -fx-text-fill : black;"
+							+ " -fx-border-width: 2;"
+							+ " -fx-font-size : 20px");
+
+		Button exit = new Button();
+		ScaleTransition exitButten = new ScaleTransition(Duration.millis(300), exit);
+			exitButten.setFromX(1);
+			exitButten.setFromY(1);
+			exitButten.setToX(1.1);
+			exitButten.setToY(1.1);
+			
+		ScaleTransition exitShrink = new ScaleTransition(Duration.millis(200), exit);
+			exitShrink.setFromX(1.1);
+			exitShrink.setFromY(1.1);
+			exitShrink.setToX(1);
+			exitShrink.setToY(1);
+
+		exit.setOnMouseEntered(e -> exitButten.playFromStart());
+		exit.setOnMouseExited(e -> exitShrink.playFromStart());
+
+		exit.setPrefSize(150, 25);
+        exit.setText("Exit");
+        pane.getChildren().add(exit);
+		exit.setLayoutX(pane.getWidth() / 2-75);
+		exit.setLayoutY(pane.getHeight() / 2+130);
+		exit.setStyle("-fx-background-color: #33CC66;"
+						+ " -fx-background-radius: 50;"
+						+ " -fx-border-color: Black;"
+						+ " -fx-border-radius: 50;"
+						+ " -fx-text-fill : black;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-font-size : 20px");
+		
+		
+		Stage Gamerules = new Stage();
+		Gamerules.setTitle("Game rules");
+
+
+		
+		Pane gamerulesPane = new Pane();
+		Image image2 = new Image(new File(
+            "lib/billeder/Reversi-start.png").toURI().toURL().toString());
+        ImageView imageView2 = new ImageView(image2);
+		gamerulesPane.getChildren().add(imageView2);
+		imageView2.setFitWidth(250); 
+		imageView2.setFitHeight(250);
+		imageView2.setLayoutX(gamerulesPane.getWidth()+100);
+		imageView2.setLayoutY(gamerulesPane.getHeight()+225);
+
+		Image image3 = new Image(new File(
+            "lib/billeder/Reversi-startv2.png").toURI().toURL().toString());
+        ImageView imageView3 = new ImageView(image3);
+		gamerulesPane.getChildren().add(imageView3);
+		imageView3.setFitWidth(250); 
+		imageView3.setFitHeight(250);
+		imageView3.setLayoutX(gamerulesPane.getWidth()+450);
+		imageView3.setLayoutY(gamerulesPane.getHeight()+225);
+
+
+		Button BacktoMenu = new Button();
+		
+		BacktoMenu.setPrefSize(150, 25);
+        BacktoMenu.setText("Back to menu");
+        gamerulesPane.getChildren().add(BacktoMenu);
+		BacktoMenu.setLayoutX(gamerulesPane.getWidth() / 2+650);
+		BacktoMenu.setLayoutY(gamerulesPane.getHeight() / 2+550);
+		BacktoMenu.setStyle("-fx-background-color: #8B4513;"
+							+ "-fx-border-color: black;"
+							+ "-fx-border-radius: 50;"
+							+ " -fx-background-radius: 50;"
+							+ " -fx-text-fill : black;"
+							+ " -fx-border-width: 2;"
+							+ " -fx-font-size : 20px");
+		
+		Button Next = new Button();
+	
+		Next.setPrefSize(150, 25);
+		Next.setText("Next");
+		gamerulesPane.getChildren().add(Next);
+		Next.setLayoutX(gamerulesPane.getWidth() / 2+475);
+		Next.setLayoutY(gamerulesPane.getHeight() / 2+550);
+		Next.setStyle("-fx-background-color: #8B4513;"
+						+ "-fx-border-color: black;"
+						+ "-fx-border-radius: 50;"
+						+ " -fx-background-radius: 50;"
+						+ " -fx-text-fill : black;"
+						+ " -fx-border-width: 2;"
+						+ " -fx-font-size : 20px");
+
+		
+		Label label = new Label("\nEach reversi piece has a black side and a white side." 
+		+ "\nOn your turn, you place one piece on the board with your color. "
+		+ "\nYou must place the piece so that an opponent's piece, or a row of opponent's pieces, is flanked by your pieces."
+		+"\nAll of the opponent's pieces between your pieces are then turned over to become your color. "
+		+ "\n\nThe object of the game is to own more pieces than your opponent when the game is over."
+		+"\nThe game is over when neither player has a move. Usually, this means the board is full. ");
+		gamerulesPane.getChildren().add(label);
+		label.setLayoutX(gamerulesPane.getWidth() + 10);
+		Gamerules.setResizable(false);
+
+		Scene gamerulesScene = new Scene(gamerulesPane, 800, 600);
+		Gamerules.setScene(gamerulesScene);
+		gamerulesPane.setStyle("-fx-background-color: #33CC66;"
+							+ " -fx-font-size : 17px;");
+		
+		Stage Gamerules2 = new Stage();
+		Gamerules2.setTitle("Game rules");
+		Pane gamerulesPane2 = new Pane();
+		
+		Image image4 = new Image(new File(
+            "lib/billeder/Reversi-arrows.png").toURI().toURL().toString());
+        ImageView imageView4 = new ImageView(image4);
+		gamerulesPane2.getChildren().add(imageView4);
+		imageView4.setFitWidth(550); 
+		imageView4.setFitHeight(325);
+		imageView4.setLayoutX(gamerulesPane2.getWidth()+200);
+		imageView4.setLayoutY(gamerulesPane2.getHeight()+225);
+
+		Button Back = new Button();
+		Back.setPrefSize(150, 25);
+        Back.setText("Back");
+        gamerulesPane2.getChildren().add(Back);
+		Back.setLayoutX(gamerulesPane2.getWidth() );
+		Back.setLayoutY(gamerulesPane2.getHeight() +550);
+		Back.setStyle("-fx-background-color: #8B4513;"
+							+ "-fx-border-color: black;"
+							+ "-fx-border-radius: 50;"
+							+ " -fx-background-radius: 50;"
+							+ " -fx-text-fill : black;"
+							+ " -fx-border-width: 2;"
+							+ " -fx-font-size : 20px");
+
+
+		Button BacktoMenu2 = new Button();
+		BacktoMenu2.setPrefSize(150, 25);
+        BacktoMenu2.setText("Back to menu");
+        gamerulesPane2.getChildren().add(BacktoMenu2);
+		BacktoMenu2.setLayoutX(gamerulesPane2.getWidth() / 2+650);
+		BacktoMenu2.setLayoutY(gamerulesPane2.getHeight() / 2+550);
+		BacktoMenu2.setStyle("-fx-background-color: #8B4513;"
+							+ "-fx-border-color: black;"
+							+ "-fx-border-radius: 50;"
+							+ " -fx-background-radius: 50;"
+							+ " -fx-text-fill : black;"
+							+ " -fx-border-width: 2;"
+							+ " -fx-font-size : 20px");
+		
+		Label label2 = new Label("\nThe game is started in the position shown below on a reversi board consisting of 64 squares in an 8x8 grid. "
+		+ "\n\nThe gray rings on the board are the places where it's legal to place your next piece."
+		+ "\n\nOn the right side of the board you can see the current score and who is winnig."
+		+ "\n\nYou can press the 'Pass' button on the right side if you dont have an option to place your piece \nand the turn goes to the opponent.");
+		gamerulesPane2.getChildren().add(label2);
+		label2.setLayoutX(gamerulesPane2.getWidth()+10);
+		
+		Scene gamerulesScene2 = new Scene(gamerulesPane2, 800, 600);
+		Gamerules2.setScene(gamerulesScene2);
+		gamerulesPane2.setStyle("-fx-background-color: #33CC66;"
+							+ " -fx-font-size : 17px;");
+		
+		
+
+		Back.setOnAction(new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent event) {
+			Gamerules.show();
+			Gamerules2.close();
+		}
+	});
+
+		Next.setOnAction(new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent event) {
+			Gamerules2.show();
+			Gamerules.close();
+		}
+	});
+		
+	BacktoMenu2.setOnAction(new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent event) {
+			menuStage.show();
+			Gamerules2.close();
+		}
+	});
+
+
+		BacktoMenu.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				menuStage.show();
+				Gamerules.close();
+			}
+		});
+
+		startGame.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				primaryStage.show();
+				menuStage.close();
+			}
+		});
+		
+
+		rules.setOnAction(new EventHandler<ActionEvent>() {
+
+		@Override
+		public void handle(ActionEvent event) {
+			Gamerules.show();
+			menuStage.close();
+		}
+	});
+		//Exit game when clicked
+		exit.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				menuStage.close();
+			}
+		});
+
+
+		// Constructs pane
+		root.setStyle("-fx-background-color: #33CC66;"); // Sets backgground color
+
+		// Makes CSS and sidepane possible
+		scene.getStylesheets().add(getClass().getResource("Reversi.css").toExternalForm());
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Reversi");
+		primaryStage.setResizable(false);
+
+		// Constructs the default 4 pieces in the center of Board
+		startFour();
+
+		// SoundFX: Intro-music when open game
+		media = new Media(new File("Intro-Reversi.wav").toURI().toString());
+		intro = new MediaPlayer(media);
+		intro.setVolume(0.1);
+		intro.play();
+
+		// Create a TimeLine for white
+		// Settings:
+		double countSpeedRate = 1; // 1 = normal, ? < 1 = faster, ? > 1 = slower
+
+		whiteTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
+				event -> {
+					// Displays and updates time
+					timeDisplayWhite.textProperty()
+							.bind(Bindings.format(" Time: %02d:%02d ", whiteMinut, whiteTimer++));
+					// Every 60 second, store 1 minute
+					if (whiteTimer % 60 == 0) {
+						whiteMinut++;
+						System.out.println("sort minut: " + whiteMinut);
+						whiteTimer = 0; // Reset seconds to 00
+					}
+				}));
+		whiteTimeLine.setCycleCount(Timeline.INDEFINITE);
+
+		// Create a TimeLine for white
+		blackTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
+				event -> {
+
+					// Displays and updates time
+					timeDisplayBlack.textProperty()
+							.bind(Bindings.format(" Time: %02d:%02d ", blackMinut, blackTimer++));
+					// Every 60 second, store 1 minute
+					if (blackTimer % 60 == 0) {
+						blackMinut++;
+						System.out.println("sort minut: " + blackMinut);
+						blackTimer = 0; // Reset seconds to 00
+					}
+				}));
+		blackTimeLine.setCycleCount(Timeline.INDEFINITE);
+
+	} // End stage
+
+	public static void SoundFX() {
+		if (soundOn) {
+			legalMoveSound.play();
+		} else if (soundOn) {
+			IllegalMoveSound.play();
+		}
+	}
+
+	////////////////////////////// Action1: Places a piece on the board
+	////////////////////////////// ////////////////////////////////////////////////////////
+	public static void placePiece(MyButton clickedButton) {
+
+		// Design of the WHITE piece
+		whitePiece = new Circle(butSize / 3 - gridSize / 7.5);
+		whitePiece.setFill(Color.WHITE);
+		whitePiece.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
+		LinearGradient fadeWhiteGrey = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+				new Stop(0, Color.WHITE), new Stop(1, Color.GREY));
+		whitePiece.setFill(fadeWhiteGrey);
+
+		// Design of the BLACK piece
+		blackPiece = new Circle(butSize / 3 - (gridSize / 6) + 1);
+		blackPiece.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
+		blackPiece.setStroke(Color.BLACK);
+		LinearGradient fadeBlackGrey = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+				new Stop(1, Color.DIMGREY), new Stop(0.5, Color.BLACK));
+		blackPiece.setFill(fadeBlackGrey);
+
+		// Adjust the TransitionSpeed
+		int tSpeed = 1;
+
+		// White turn:
+		if (clickCount % 2 != 0) {
+
+			// Animation of white capture black pieces
+			if (clickedButton.getMyValue() != 0) {
+				FillTransition blackToWhite = new FillTransition(Duration.seconds(tSpeed), whitePiece);
+				blackToWhite.setToValue(Color.WHITE);
+				blackToWhite.setCycleCount(1);
+				blackToWhite.play();
+			}
+			clickedButton.setGraphic(whitePiece); // places White piece on-board
+			clickedButton.setMyValue(1);
+			playerTurn = "white";
+
+			// Blacks turn:
+		} else {
+
+			// Animation of black capture white pieces
+			if (clickedButton.getMyValue() != 0) {
+				FillTransition whiteToBlack = new FillTransition(Duration.seconds(tSpeed), blackPiece);
+				whiteToBlack.setToValue(Color.BLACK);
+				whiteToBlack.setCycleCount(1);
+				whiteToBlack.play();
+			}
+			clickedButton.setGraphic(blackPiece); // places Black piece on-board
+			clickedButton.setMyValue(-1);
+			playerTurn = "black";
+		}
+	}
+
+	// Used for transparent circles to highlight legal moves
+	public static void placePieceTransparent(MyButton[][] cell, int x, int y) {
+
+		double centerX = butSize / 2;
+		double centerY = butSize / 2;
+		double radiusX = (butSize / 6) + butSize / gridSize;
+		double radiusY = (butSize / 6) + butSize / gridSize;
+
+		Ellipse blackRing = new Ellipse(centerX, centerY, radiusX, radiusY);
+		blackRing.setFill(null);
+		blackRing.setStroke(Color.GRAY);
+		blackRing.setStrokeWidth(butSize / 8);
+
+		cell[x][y].setGraphic(blackRing);
+	}
+
+	// Checks if every move is "Legal" else "Illegal" according to "Rules of
+	// Reversi"
+	public static boolean legal(MyButton[][] cell, int x, int y) {
+
+		if (cell[x][y].getMyValue() == 0) {
+			return surrounded(cell, x, y);
+		} else {
+			return false;
+		}
+	}
+
+	// Checks if there are enemy pieces around the placed-Piece
+	public static boolean surrounded(MyButton[][] cell, int x, int y) {
+
+		// Coordinates E/W/S/N of the piece placed
+		int right = x + 1;
+		int left = x - 1;
+		int down = y + 1;
+		int up = y - 1;
+
+		// Serves as a border so there wont be an OutOfBounds error
+		if (clickCount % 2 != 0) {
+			turn = 1;
+		} else {
+			turn = -1;
+		}
+
+		if (right >= gridSize) {
+			right = gridSize - 1;
+		}
+		if (left < 0) {
+			left = 0;
+		}
+		if (down >= gridSize) {
+			down = gridSize - 1;
+		}
+		if (up < 0) {
+			up = 0;
+		}
+
+		// The actual boolean check for if enemy piece around your piece
+		if (cell[right][down].getMyValue() == turn * -1) {
+			if (line(cell, right, down, x, y)) {
+				return true;
+			}
+		}
+		if (cell[right][y].getMyValue() == turn * -1) {
+			if (line(cell, right, y, x, y)) {
+				return true;
+			}
+		}
+		if (cell[right][up].getMyValue() == turn * -1) {
+			if (line(cell, right, up, x, y)) {
+				return true;
+			}
+		}
+		if (cell[x][down].getMyValue() == turn * -1) {
+			if (line(cell, x, down, x, y)) {
+				return true;
+			}
+		}
+		if (cell[x][up].getMyValue() == turn * -1) {
+			if (line(cell, x, up, x, y)) {
+				return true;
+			}
+		}
+		if (cell[left][down].getMyValue() == turn * -1) {
+			if (line(cell, left, down, x, y)) {
+				return true;
+			}
+		}
+		if (cell[left][y].getMyValue() == turn * -1) {
+			if (line(cell, left, y, x, y)) {
+				return true;
+			}
+		}
+		if (cell[left][up].getMyValue() == turn * -1) {
+			if (line(cell, left, up, x, y)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Checks the whole row, column and diagonal for enemy pieces.
+	// If your own piece --> Recursive method call
+	// If empty --> Break and return false.
+	public static boolean line(MyButton[][] cell, int side_x, int side_y, int old_x, int old_y) {
+		int new_x = side_x + (side_x - old_x);
+		int new_y = side_y + (side_y - old_y);
+
+		if (new_x >= gridSize) {
+			return false;
+		}
+		if (new_x < 0) {
+			return false;
+		}
+		if (new_y >= gridSize) {
+			return false;
+		}
+		if (new_y < 0) {
+			return false;
+		}
+
+		if (cell[new_x][new_y].getMyValue() == turn * -1) {
+			return line(cell, new_x, new_y, side_x, side_y);
+		} else if (cell[new_x][new_y].getMyValue() == turn) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// Starts the process of capturing a piece
+	public static void capturePiece(MyButton[][] cell, int x, int y) {
+
+		// Coordinates E/W/S/N of the piece placed
+		int right = x + 1;
+		int left = x - 1;
+		int down = y + 1;
+		int up = y - 1;
+
+		// Serves as a border so there wont be an OutOfBounds error
+		if (clickCount % 2 != 0) {
+			turn = 1;
+		} else {
+			turn = -1;
+		}
+
+		if (right >= gridSize) {
+			right = gridSize - 1;
+		}
+		if (left < 0) {
+			left = 0;
+		}
+		if (down >= gridSize) {
+			down = gridSize - 1;
+		}
+		if (up < 0) {
+			up = 0;
+		}
+
+		// The actual boolean check for if enemy piece around your piece
+		// Thereafter calls method to tjek if there's an allied
+		// Piece on the other side of the enemy piece
+		// If true then it calls the method to change the pieces
+		// Repeats in all 8 directions
+		if (cell[right][down].getMyValue() == turn * -1) {
+			if (line(cell, right, down, x, y) == true) {
+				changePiece(cell, right, down, x, y);
+			}
+		}
+		if (cell[right][y].getMyValue() == turn * -1) {
+			if (line(cell, right, y, x, y) == true) {
+				changePiece(cell, right, y, x, y);
+			}
+		}
+		if (cell[right][up].getMyValue() == turn * -1) {
+			if (line(cell, right, up, x, y) == true) {
+				changePiece(cell, right, up, x, y);
+			}
+		}
+		if (cell[x][down].getMyValue() == turn * -1) {
+			if (line(cell, x, down, x, y) == true) {
+				changePiece(cell, x, down, x, y);
+			}
+		}
+		if (cell[x][up].getMyValue() == turn * -1) {
+			if (line(cell, x, up, x, y) == true) {
+				changePiece(cell, x, up, x, y);
+			}
+		}
+		if (cell[left][down].getMyValue() == turn * -1) {
+			if (line(cell, left, down, x, y) == true) {
+				changePiece(cell, left, down, x, y);
+			}
+		}
+		if (cell[left][y].getMyValue() == turn * -1) {
+			if (line(cell, left, y, x, y) == true) {
+				changePiece(cell, left, y, x, y);
+			}
+		}
+		if (cell[left][up].getMyValue() == turn * -1) {
+			if (line(cell, left, up, x, y) == true) {
+				changePiece(cell, left, up, x, y);
+			}
+
+		}
+	}
+
+	// changes the pieces inbetween the placed piece and a same colored piece
+	public static void changePiece(MyButton[][] cell, int side_x, int side_y, int old_x, int old_y) {
+		int new_x = side_x + (side_x - old_x);
+		int new_y = side_y + (side_y - old_y);
+
+		if (new_x >= gridSize) {
+			return;
+		}
+		if (new_x < 0) {
+			return;
+		}
+		if (new_y >= gridSize) {
+			return;
+		}
+		if (new_y < 0) {
+			return;
+		}
+
+		// Changes piece color
+		placePiece(cell[side_x][side_y]);
+
+		// Contiunes code until it hits a same colored piece
+		if (cell[new_x][new_y].getMyValue() == turn * -1) {
+			changePiece(cell, new_x, new_y, side_x, side_y); // Rekursiv
+		} else if (cell[new_x][new_y].getMyValue() == turn) {
+			return;
+		}
+	}
+
+	// Highlight function
+	public static void highlight() {
+		availableMoves = 0;
+		fullBoard = 0;
+		numberOfBlack = 0;
+		numberOfWhite = 0;
+		for (int i = 0; i < gridSize; i++) {
+			for (int j = 0; j < gridSize; j++) {
+				if (legal(buttons2D, i, j) == true) {
+					placePieceTransparent(buttons2D, i, j);
+					availableMoves++;
+					fullBoard++;
+				} else if (buttons2D[i][j].getMyValue() == 0) {
+					buttons2D[i][j].setGraphic(null);
+					fullBoard++;
+				} else if (buttons2D[i][j].getMyValue() == 1) {
+					numberOfWhite++;
+				} else if (buttons2D[i][j].getMyValue() == -1) {
+					numberOfBlack++;
+				}
+			}
+		}
+		if (availableMoves == 0) {
+			// Gør pass knappen mulig at bruge
+			pass.setDisable(false);
+		} else {
+			pass.setDisable(true);
+		}
+		if (numberOfWhite == 0) {
+			winner("BLACK", new Stage());
+		}
+		if (numberOfBlack == 0) {
+			winner("WHITE", new Stage());
+		}
+		if (fullBoard == 0 && numberOfBlack > numberOfWhite) {
+			winner("BLACK", new Stage());
+		} else if (fullBoard == 0 && numberOfBlack < numberOfWhite) {
+			winner("WHITE", new Stage());
+		} else if (fullBoard == 0 && numberOfBlack == numberOfWhite) {
+			winner("NOBODY", new Stage());
+		}
+	}
+
+	// Highlights player turn in label
+	public static void focusPlayer() {
+		if (clickCount % 2 != 0) {
+			whiteScore.setFont(bold);
+			blackScore.setFont(normal);
+			timeDisplayWhite.setFont(bold);
+			timeDisplayBlack.setFont(normal);
+
+		} else {
+			whiteScore.setFont(normal);
+			blackScore.setFont(bold);
+			timeDisplayWhite.setFont(normal);
+			timeDisplayBlack.setFont(bold);
+		}
+	}
+
+	// Constructs the default 4 pieces in the center of Board
+	public static void startFour() {
+		clickCount++;
+		placePiece(buttons2D[(gridSize / 2) - 1][(gridSize / 2) - 1]);
+		clickCount++;
+		placePiece(buttons2D[(gridSize / 2)][(gridSize / 2) - 1]);
+		clickCount++;
+		placePiece(buttons2D[(gridSize / 2)][(gridSize / 2)]);
+		clickCount++;
+		placePiece(buttons2D[(gridSize / 2) - 1][(gridSize / 2)]);
+		clickCount++;
+		highlight();
+		whiteScore.setText("White Score: " + numberOfWhite);
+		blackScore.setText("Black Score: " + numberOfBlack);
+		focusPlayer();
+	}
+
+	// Pops up with a little window declaring the winner
+	public static void winner(String winner, Stage winStage) {
+
+		winStage.initModality(Modality.APPLICATION_MODAL);
+		winStage.setTitle("Game over");
+		winStage.setMinWidth(400);
+		winStage.setMinHeight(200);
+
+		VBox layout = new VBox(10);
+		layout.setAlignment(Pos.CENTER);
+
+		Font font = new Font("Impact", 20);
+
+		Label label = new Label("THE WINNER IS " + winner + " !!!!!");
+		label.setFont(font);
+		layout.getChildren().add(label);
+
+		Button closeButton = new Button();
+		closeButton.setText("Start a New Game");
+		closeButton.setOnAction(e -> winStage.close());
+		closeButton.setStyle("-fx-background-radius: 15");
+		layout.getChildren().add(closeButton);
+
+		closeButton.setOnAction(event -> {
+			if (winner.equals("BLACK")) {
+				blackWinCounter2++;
+			} else if (winner.equals("WHITE")) {
+				whiteWinCounter2++;
+			}
+			restartGame(buttons2D);
+			winStage.close();
+		});
+
+		Scene scene = new Scene(layout);
+		winStage.setScene(scene);
+		winStage.show();
+		layout.setStyle("-fx-background-color: #33CC66;");
+	}
+
+	public static void restartGame(MyButton[][] cell) {
+		gameCounter++;
+
+		clickCount = 0;
+
+		// Reset the timer
+		blackValue = 2;
+		whiteValue = 2;
+		blackTimer = 0; // new
+		blackMinut = 0; // new
+		whiteTimer = 0; // new
+		whiteMinut = 0; // new
+
+		// Reset time display
+		whiteTimeLine.stop();
+		blackTimeLine.stop();
+		timeDisplayWhite.textProperty().unbind();
+		timeDisplayBlack.textProperty().unbind();
+		timeDisplayWhite.setText(" Time: 00:00 ");
+		timeDisplayBlack.setText(" Time: 00:00 ");
+
+		// Update GUI to reflect reset game state
+		blackScore.setText("Black Score: 2");
+		whiteScore.setText("White Score: 2");
+		for (int row = 0; row < gridSize; row++) {
+			for (int column = 0; column < gridSize; column++) {
+
+				cell[row][column].setGraphic(null); // Add coordinates and accessibility to all buttons.
+				cell[row][column].setMyValue(0);
+			}
+		}
+		if (gameCounter % 2 != 0) {
+			clickCount++;
+		}
+		startFour();
+		whiteWinCounter.setText("" + whiteWinCounter2);
+		blackWinCounter.setText("" + blackWinCounter2);
+	}
+
+} // End class
+
+// A class that makes it possible to assign a INT value to each button
+class MyButton extends Button {
+
+	private int MyValue;
+
+	public MyButton(int MyValue) {
+		this.MyValue = MyValue;
+	}
+
+	// A method to get the value of a button
+	public int getMyValue() {
+		return MyValue;
+	}
+
+	// A method to change the value of a button
+	public void setMyValue(int MyValue) {
+		this.MyValue = MyValue;
+	}
+}
