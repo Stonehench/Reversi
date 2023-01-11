@@ -6,6 +6,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import javafx.animation.FillTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -35,6 +36,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -201,25 +203,6 @@ public class Reversi extends Application {
 				emptySpace.setVisible(false);
 				root.add(emptySpace, gridSize, i);
 			}
-				/*Button backButton = new Button();
-				backButton.setText("Back to Menu");
-				backButton.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the button//
-																										
-				backButton.setStyle("-fx-base: white;"); // Button color
-				backButton.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
-				root.add(backButton, gridSize+1, i);
-				GridPane.setConstraints(backButton, gridSize+1, i, 1, 1, HPos.CENTER, VPos.CENTER);
-				
-				backButton.setOnAction(new EventHandler<ActionEvent>() {
-
-					@Override
-					public void handle(ActionEvent event) {
-						//.show();
-						//Reversi.close();
-					}
-				});*/
-				
-
 			
 
 		} // sidePane MENU buttons end
@@ -767,6 +750,7 @@ public class Reversi extends Application {
 		LinearGradient fadeWhiteGrey = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
 				new Stop(0, Color.WHITE), new Stop(1, Color.GREY));
 		whitePiece.setFill(fadeWhiteGrey);
+		
 
 		// Design of the BLACK piece
 		blackPiece = new Circle(butSize / 3 - (gridSize / 6) + 1);
@@ -776,8 +760,9 @@ public class Reversi extends Application {
 				new Stop(1, Color.DIMGREY), new Stop(0.5, Color.BLACK));
 		blackPiece.setFill(fadeBlackGrey);
 
-		// Adjust the TransitionSpeed
+		// Adjust the Transition- and rotation speed
 		int tSpeed = 1;
+		double rSpeed = 0.40;
 
 		// White turn:
 		if (clickCount % 2 != 0) {
@@ -786,8 +771,15 @@ public class Reversi extends Application {
 			if (clickedButton.getMyValue() != 0) {
 				FillTransition blackToWhite = new FillTransition(Duration.seconds(tSpeed), whitePiece);
 				blackToWhite.setToValue(Color.WHITE);
-				blackToWhite.setCycleCount(1);
+				blackToWhite.setCycleCount(Timeline.INDEFINITE);
 				blackToWhite.play();
+				
+				//Rotation of captured white pieces
+				RotateTransition rtWhite = new RotateTransition(Duration.seconds(rSpeed),whitePiece);
+				rtWhite.setByAngle(180);
+				rtWhite.setCycleCount(1);
+				rtWhite.setAxis(Rotate.Y_AXIS);
+				rtWhite.play();
 			}
 			clickedButton.setGraphic(whitePiece); // places White piece on-board
 			clickedButton.setMyValue(1);
@@ -802,6 +794,14 @@ public class Reversi extends Application {
 				whiteToBlack.setToValue(Color.BLACK);
 				whiteToBlack.setCycleCount(1);
 				whiteToBlack.play();
+				
+				//Rotation of captured black pieces
+				RotateTransition rtBlack = new RotateTransition(Duration.seconds(rSpeed),blackPiece);
+				rtBlack.setByAngle(180);
+				rtBlack.setCycleCount(1);
+				rtBlack.setAxis(Rotate.Y_AXIS);
+				rtBlack.play();
+				
 			}
 			clickedButton.setGraphic(blackPiece); // places Black piece on-board
 			clickedButton.setMyValue(-1);
