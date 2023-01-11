@@ -1,7 +1,7 @@
+package januarProjektet2023;
 
 
 import javafx.animation.ScaleTransition;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import javafx.animation.FillTransition;
@@ -394,8 +394,7 @@ public class Reversi extends Application {
 	@Override
 	public void start(Stage primaryStage) throws MalformedURLException{
 
-        Image image = new Image(new File(
-            "lib/billeder/reversi-game.jpg").toURI().toURL().toString());
+        Image image = new Image(new File("reversi-game.jpg").toURI().toString());
         ImageView imageView = new ImageView(image);
         Pane pane = new Pane();
         pane.getChildren().add(imageView);
@@ -406,7 +405,7 @@ public class Reversi extends Application {
 
 
         // Set the scene for the stage
-        Scene menuScene = new Scene(pane, 1200, 675);
+        Scene menuScene = new Scene(pane, 1200, 640);
         menuStage.setScene(menuScene);
 		menuStage.setResizable(false);
         menuStage.show();
@@ -433,7 +432,7 @@ public class Reversi extends Application {
 		startGame.setOnMouseExited(e -> startShrink.playFromStart());
 	
         startGame.setPrefSize(300, 60);
-        startGame.setText("Start Game");
+        startGame.setText("Start game");
         pane.getChildren().add(startGame);
 		startGame.setLayoutX(pane.getWidth() / 2-150);
 		startGame.setLayoutY(pane.getHeight() / 2);
@@ -492,7 +491,7 @@ public class Reversi extends Application {
 		exit.setOnMouseExited(e -> exitShrink.playFromStart());
 
 		exit.setPrefSize(150, 25);
-        exit.setText("Exit");
+        exit.setText("Exit game");
         pane.getChildren().add(exit);
 		exit.setLayoutX(pane.getWidth() / 2-75);
 		exit.setLayoutY(pane.getHeight() / 2+130);
@@ -511,8 +510,7 @@ public class Reversi extends Application {
 
 		
 		Pane gamerulesPane = new Pane();
-		Image image2 = new Image(new File(
-            "lib/billeder/Reversi-start.png").toURI().toURL().toString());
+		Image image2 = new Image(new File("Reversi-start.png").toURI().toString());
         ImageView imageView2 = new ImageView(image2);
 		gamerulesPane.getChildren().add(imageView2);
 		imageView2.setFitWidth(250); 
@@ -520,8 +518,7 @@ public class Reversi extends Application {
 		imageView2.setLayoutX(gamerulesPane.getWidth()+100);
 		imageView2.setLayoutY(gamerulesPane.getHeight()+225);
 
-		Image image3 = new Image(new File(
-            "lib/billeder/Reversi-startv2.png").toURI().toURL().toString());
+		Image image3 = new Image(new File("Reversi-startv2.png").toURI().toString());
         ImageView imageView3 = new ImageView(image3);
 		gamerulesPane.getChildren().add(imageView3);
 		imageView3.setFitWidth(250); 
@@ -581,7 +578,7 @@ public class Reversi extends Application {
 		Pane gamerulesPane2 = new Pane();
 		
 		Image image4 = new Image(new File(
-            "lib/billeder/Reversi-arrows.png").toURI().toURL().toString());
+            "Reversi-arrows.png").toURI().toString());
         ImageView imageView4 = new ImageView(image4);
 		gamerulesPane2.getChildren().add(imageView4);
 		imageView4.setFitWidth(550); 
