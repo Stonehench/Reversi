@@ -1,6 +1,8 @@
 package JanuarProject;
 
 import javafx.animation.FillTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,6 +15,7 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -59,31 +62,47 @@ public class Model {
 
         // Adjust the TransitionSpeed
         int tSpeed = 1;
+		double rSpeed = 0.40;
 
         // White turn:
-        if (clickCount % 2 != 0) {
+		if (clickCount % 2 != 0) {
 
-            // Animation of white capture black pieces
-            if (clickedButton.getMyValue() != 0) {
-                FillTransition blackToWhite = new FillTransition(Duration.seconds(tSpeed), View.whitePiece);
-                blackToWhite.setToValue(Color.WHITE);
-                blackToWhite.setCycleCount(1);
-                blackToWhite.play();
-            }
-            clickedButton.setGraphic(View.whitePiece); // places White piece on-board
-            clickedButton.setMyValue(1);
-            View.playerTurn = "white";
+			// Animation of white capture black pieces
+			if (clickedButton.getMyValue() != 0) {
+				FillTransition blackToWhite = new FillTransition(Duration.seconds(tSpeed), View.whitePiece);
+				blackToWhite.setToValue(Color.WHITE);
+				blackToWhite.setCycleCount(Timeline.INDEFINITE);
+				blackToWhite.play();
+				
+				//Rotation of captured white pieces
+				RotateTransition rtWhite = new RotateTransition(Duration.seconds(rSpeed),View.whitePiece);
+				rtWhite.setByAngle(180);
+				rtWhite.setCycleCount(1);
+				rtWhite.setAxis(Rotate.Y_AXIS);
+				rtWhite.play();
+			}
+			clickedButton.setGraphic(View.whitePiece); // places White piece on-board
+			clickedButton.setMyValue(1);
+			View.playerTurn = "white";
 
-            // Blacks turn:
-        } else {
+			// Blacks turn:
+		} else {
 
-            // Animation of black capture white pieces
-            if (clickedButton.getMyValue() != 0) {
-                FillTransition whiteToBlack = new FillTransition(Duration.seconds(tSpeed), View.blackPiece);
-                whiteToBlack.setToValue(Color.BLACK);
-                whiteToBlack.setCycleCount(1);
-                whiteToBlack.play();
-            }
+			// Animation of black capture white pieces
+			if (clickedButton.getMyValue() != 0) {
+				FillTransition whiteToBlack = new FillTransition(Duration.seconds(tSpeed), View.blackPiece);
+				whiteToBlack.setToValue(Color.BLACK);
+				whiteToBlack.setCycleCount(1);
+				whiteToBlack.play();
+				
+				//Rotation of captured black pieces
+				RotateTransition rtBlack = new RotateTransition(Duration.seconds(rSpeed),View.blackPiece);
+				rtBlack.setByAngle(180);
+				rtBlack.setCycleCount(1);
+				rtBlack.setAxis(Rotate.Y_AXIS);
+				rtBlack.play();
+				
+			}
             clickedButton.setGraphic(View.blackPiece); // places Black piece on-board
             clickedButton.setMyValue(-1);
             View.playerTurn = "black";
