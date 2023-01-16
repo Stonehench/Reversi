@@ -12,11 +12,8 @@ public class Initiator extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         View view = new View();
-        Menu menu = new Menu();
-       
-        Controller controller = new Controller(stage);
-        menu.start(stage);
-        stage.setScene(menu.menuScene);
-        stage.show();
+        new Controller(stage);
+        view.start(stage);
+        stage.setScene(view.scene);
     }
 }
