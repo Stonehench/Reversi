@@ -1,4 +1,4 @@
-package januarProjektet2023;
+package JanuarProject;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -30,7 +30,7 @@ public class BasicReversi extends Application {
 	static int fullBoard;
 	static int gridSize = 8;
 	static int windowSize = 600;
-	static int clickCount = 0;
+	static int clickCount = 1;
 	static int butSize = windowSize / gridSize;
 	static int numberOfWhite;
 	static int numberOfBlack;
@@ -47,18 +47,17 @@ public class BasicReversi extends Application {
 	static Button restart = new Button("Restart game");
 	static Label showTurn = new Label();
 	static GridPane root = new GridPane();
-	static Scene scene = new Scene(root, windowSize+150, windowSize);
-
+	static Scene scene = new Scene(root, windowSize + 150, windowSize);
 
 	// Class Constructor
 	public BasicReversi() {
 
 		// Creates the first column of the menu on the right
 		for (int i = 0; i < gridSize; i++) {
-			if(i == 1){
-				
-				//Display whose turn it is
-				showTurn.setPrefSize(windowSize/4,butSize);
+			if (i == 1) {
+
+				// Display whose turn it is
+				showTurn.setPrefSize(windowSize / 4, butSize);
 				showTurn.setFont(Font.font("Verdana", 15));
 				showTurn.setText(" Next Turn: White");
 				showTurn.setStyle("-fx-background-color: white;"
@@ -70,8 +69,8 @@ public class BasicReversi extends Application {
 				root.add(showTurn, gridSize, i);
 			}
 			if (i == gridSize - 2) {
-				
-				//Pass button
+
+				// Pass button
 				pass.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the button
 				pass.setStyle("-fx-base: white;"); // Button color
 				pass.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
@@ -79,17 +78,15 @@ public class BasicReversi extends Application {
 				root.add(pass, gridSize, i);
 				GridPane.setConstraints(pass, gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
 			} else if (i == gridSize - 1) {
-				
+
 				// Restart button
 				restart.setPrefSize((windowSize / 4) - (gridSize * 2.5), butSize - (gridSize * 2.5)); // Size of the //
 				restart.setStyle("-fx-base: white;"); // Button color
 				restart.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
 				root.add(restart, gridSize, i);
 				GridPane.setConstraints(restart, gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
-			} 
+			}
 		}
-		
-
 
 		// Construction the 8x8 Grid with 64 buttons
 		for (int row = 0; row < gridSize; row++) {
@@ -112,7 +109,8 @@ public class BasicReversi extends Application {
 			}
 		}
 
-		//////////////////////////////////// On-click function///////////////////////////////////////////
+		//////////////////////////////////// On-click
+		//////////////////////////////////// function///////////////////////////////////////////
 
 		// Adds all the functionality for when a button is clicked
 		for (int x = 0; x < gridSize; x++) {
@@ -125,16 +123,18 @@ public class BasicReversi extends Application {
 						int x = GridPane.getColumnIndex(clickedButton);
 						int y = GridPane.getRowIndex(clickedButton);
 
-						// Checks if the clicked move is legal/illegal
-						if (legal(buttons2D, x, y) == true) {
+						// Constructs the default 4 pieces in the center of Board
+						if (clickCount < 7 + gameCounter%2) {
+							startFour(clickedButton);
+							turnDisplay();
 
+							// Checks if the clicked move is legal/illegal
+						} else if (legal(buttons2D, x, y) == true) {
 							placePiece(buttons2D[x][y]);
 							capturePiece(buttons2D, x, y); // Check if there is a capture
 							clickCount++;
 							highlight();
 							turnDisplay();
-							
-
 
 						} // End if-else
 
@@ -150,12 +150,11 @@ public class BasicReversi extends Application {
 						System.out.println("white score: " + numberOfWhite);
 						System.out.println("");
 
-					} 
-				}); 
-			} 
-		} //end for loop
+					}
+				});
+			}
+		} // end for loop
 
-		
 		// Pass button
 		pass.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -194,13 +193,9 @@ public class BasicReversi extends Application {
 		primaryStage.setTitle("Reversi");
 		primaryStage.show();
 
-		// Constructs the default 4 pieces in the center of Board
-		startFour();
-
 	} // End stage
 
-	
-	//Display whose turn it is:
+	// Display whose turn it is:
 	public static void turnDisplay() {
 		if (clickCount % 2 != 0) {
 			showTurn.setText(" Next Turn: White");
@@ -209,7 +204,8 @@ public class BasicReversi extends Application {
 		}
 	}
 
-	////////////////////////////// Action1: Places a piece on the board  ////////////////////////////////////////////////////////
+	////////////////////////////// Action1: Places a piece on the board
+	////////////////////////////// ////////////////////////////////////////////////////////
 	public static void placePiece(MyButton2 clickedButton) {
 
 		// Design of the WHITE piece
@@ -221,14 +217,13 @@ public class BasicReversi extends Application {
 		blackPiece = new Circle(butSize / 3 - (gridSize / 6) + 1);
 		blackPiece.setStroke(Color.BLACK);
 
-
 		// White turn:
 		if (clickCount % 2 != 0) {
 			clickedButton.setGraphic(whitePiece); // places White piece on-board
 			clickedButton.setMyValue(1);
 			playerTurn = "white";
 
-			//Blacks turn:
+			// Blacks turn:
 		} else {
 			clickedButton.setGraphic(blackPiece); // places Black piece on-board
 			clickedButton.setMyValue(-1);
@@ -237,8 +232,8 @@ public class BasicReversi extends Application {
 
 	}
 
-
-	// Checks if every move is "Legal" else "Illegal" according to "Rules of Reversi"
+	// Checks if every move is "Legal" else "Illegal" according to "Rules of
+	// Reversi"
 	public static boolean legal(MyButton2[][] cell, int x, int y) {
 
 		if (cell[x][y].getMyValue() == 0) {
@@ -451,66 +446,86 @@ public class BasicReversi extends Application {
 			return;
 		}
 	}
+
 	// Highlight function
-		public static void highlight() {
-			availableMoves = 0;
-			fullBoard = 0;
-			numberOfBlack = 0;
-			numberOfWhite = 0;
-			
-			
-			for (int i = 0; i < gridSize; i++) {
-				for (int j = 0; j < gridSize; j++) {
-					if (legal(buttons2D, i, j) == true) {
-						availableMoves++;
-						fullBoard++;
-					} else if (buttons2D[i][j].getMyValue() == 0) {
-						buttons2D[i][j].setGraphic(null);
-						fullBoard++;
-					} else if (buttons2D[i][j].getMyValue() == 1) {
-						numberOfWhite++;
-					} else if (buttons2D[i][j].getMyValue() == -1) {
-						numberOfBlack++;
-					}
+	public static void highlight() {
+		availableMoves = 0;
+		fullBoard = 0;
+		numberOfBlack = 0;
+		numberOfWhite = 0;
+
+		for (int i = 0; i < gridSize; i++) {
+			for (int j = 0; j < gridSize; j++) {
+				if (legal(buttons2D, i, j) == true) {
+					availableMoves++;
+					fullBoard++;
+				} else if (buttons2D[i][j].getMyValue() == 0) {
+					buttons2D[i][j].setGraphic(null);
+					fullBoard++;
+				} else if (buttons2D[i][j].getMyValue() == 1) {
+					numberOfWhite++;
+				} else if (buttons2D[i][j].getMyValue() == -1) {
+					numberOfBlack++;
 				}
-			}
-			
-			
-			if (availableMoves == 0) {
-				// Gør pass knappen mulig at bruge
-				pass.setDisable(false);
-			} else {
-				pass.setDisable(true);
-			}
-			if (numberOfWhite == 0) {
-				winner("BLACK", new Stage());
-			}
-			if (numberOfBlack == 0) {
-				winner("WHITE", new Stage());
-			}
-			if (fullBoard == 0 && numberOfBlack > numberOfWhite) {
-				winner("BLACK", new Stage());
-			} else if (fullBoard == 0 && numberOfBlack < numberOfWhite) {
-				winner("WHITE", new Stage());
-			} else if (fullBoard == 0 && numberOfBlack == numberOfWhite) {
-				winner("NOBODY", new Stage());
 			}
 		}
 
+		if (availableMoves == 0) {
+			// Gør pass knappen mulig at bruge
+			pass.setDisable(false);
+		} else {
+			pass.setDisable(true);
+		}
+		if (numberOfWhite == 0) {
+			winner("BLACK", new Stage());
+		}
+		if (numberOfBlack == 0) {
+			winner("WHITE", new Stage());
+		}
+		if (fullBoard == 0 && numberOfBlack > numberOfWhite) {
+			winner("BLACK", new Stage());
+		} else if (fullBoard == 0 && numberOfBlack < numberOfWhite) {
+			winner("WHITE", new Stage());
+		} else if (fullBoard == 0 && numberOfBlack == numberOfWhite) {
+			winner("NOBODY", new Stage());
+		}
+	}
 
 	// Constructs the default 4 pieces in the center of Board
-	public static void startFour() {
-		clickCount++;
-		placePiece(buttons2D[(gridSize / 2) - 1][(gridSize / 2) - 1]);
-		clickCount++;
-		placePiece(buttons2D[(gridSize / 2)][(gridSize / 2) - 1]);
-		clickCount++;
-		placePiece(buttons2D[(gridSize / 2)][(gridSize / 2)]);
-		clickCount++;
-		highlight();
-		placePiece(buttons2D[(gridSize / 2) - 1][(gridSize / 2)]);
-		clickCount++;
-
+	public static void startFour(MyButton2 clickButton2) {
+		if (clickButton2.getMyValue() == 0) {
+			if (clickButton2 == buttons2D[(gridSize / 2) - 1][(gridSize / 2) - 1]) {
+				System.out.println("sut den");
+				placePiece(clickButton2);
+				clickCount++;
+			} else if (clickButton2 == buttons2D[(gridSize / 2)][(gridSize / 2) - 1]) {
+				System.out.println("sut den");
+				placePiece(clickButton2);
+				clickCount++;
+			} else if (clickButton2 == buttons2D[(gridSize / 2)][(gridSize / 2)]) {
+				System.out.println("sut den");
+				placePiece(clickButton2);
+				clickCount++;
+			} else if (clickButton2 == buttons2D[(gridSize / 2) - 1][(gridSize / 2)]) {
+				System.out.println("sut den");
+				placePiece(clickButton2);
+				clickCount++;
+			}
+		} 
+		if (gameCounter%2==0){
+			if(clickCount == 2){
+				clickCount++;
+			} else if(clickCount == 5){
+				clickCount++;
+			}
+		} else {
+			if(clickCount == 3){
+				clickCount++;
+			} else if(clickCount == 6){
+				clickCount++;
+			}
+		}
+		
 	}
 
 	// Pops up with a little window declaring the winner
@@ -537,11 +552,11 @@ public class BasicReversi extends Application {
 		layout.getChildren().add(closeButton);
 
 		closeButton.setOnAction(event -> {
-	
-			//Game over - Start new game button appears
+
+			// Game over - Start new game button appears
 			restartGame(buttons2D);
 			winStage.close();
-			});
+		});
 
 		Scene scene = new Scene(layout);
 		winStage.setScene(scene);
@@ -549,15 +564,14 @@ public class BasicReversi extends Application {
 		layout.setStyle("-fx-background-color: #33CC66;");
 	}
 
-	
-	//Restarts the game without closing program
+	// Restarts the game without closing program
 	public static void restartGame(MyButton2[][] cell) {
-		
-		//Counter that makes it possible to switch which player starts when new game
+
+		// Counter that makes it possible to switch which player starts when new game
 		gameCounter++;
 
 		// Reset the timer and all values
-		clickCount = 0;		
+		clickCount = 1;
 		blackValue = 2;
 		whiteValue = 2;
 
@@ -571,13 +585,12 @@ public class BasicReversi extends Application {
 		if (gameCounter % 2 != 0) {
 			clickCount++;
 		}
-		startFour();
 	}
 
 } // End class
 
-
-// A customized class that makes it possible to assign a INT value to each button
+// A customized class that makes it possible to assign a INT value to each
+// button
 class MyButton2 extends Button {
 
 	private int MyValue;
@@ -596,4 +609,3 @@ class MyButton2 extends Button {
 		this.MyValue = MyValue;
 	}
 }
-
