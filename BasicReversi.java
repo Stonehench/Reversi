@@ -495,19 +495,15 @@ public class BasicReversi extends Application {
 	public static void startFour(MyButton2 clickButton2) {
 		if (clickButton2.getMyValue() == 0) {
 			if (clickButton2 == buttons2D[(gridSize / 2) - 1][(gridSize / 2) - 1]) {
-				System.out.println("sut den");
 				placePiece(clickButton2);
 				clickCount++;
 			} else if (clickButton2 == buttons2D[(gridSize / 2)][(gridSize / 2) - 1]) {
-				System.out.println("sut den");
 				placePiece(clickButton2);
 				clickCount++;
 			} else if (clickButton2 == buttons2D[(gridSize / 2)][(gridSize / 2)]) {
-				System.out.println("sut den");
 				placePiece(clickButton2);
 				clickCount++;
 			} else if (clickButton2 == buttons2D[(gridSize / 2) - 1][(gridSize / 2)]) {
-				System.out.println("sut den");
 				placePiece(clickButton2);
 				clickCount++;
 			}
