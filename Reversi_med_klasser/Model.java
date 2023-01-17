@@ -33,6 +33,7 @@ public class Model {
     static int blackWinCounter2 = 0;
     static int blackValue;
     static int whiteValue;
+    static int numberOfBoards;
     static boolean soundOn = true;
     static String winner = "";
 
@@ -344,9 +345,10 @@ public class Model {
         fullBoard = 0;
         numberOfBlack = 0;
         numberOfWhite = 0;
+        numberOfBoards++;
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                if (legal(View.buttons2D, i, j) == true) {
+                if (legal(View.buttons2D, i, j)) {
                     placePieceTransparent(View.buttons2D, i, j);
                     availableMoves++;
                     fullBoard++;
@@ -363,6 +365,26 @@ public class Model {
         if (availableMoves == 0) {
             // Gør pass knappen mulig at bruge
             View.pass.setDisable(false);
+            clickCount++;
+            for (int i = 0; i < gridSize; i++) {
+                for (int j = 0; j < gridSize; j++) {
+                    if (legal(View.buttons2D, i, j)) {
+                        availableMoves++;
+                    }
+                }
+            }
+            System.out.println("available moves "+availableMoves);
+            if (availableMoves == 0 && numberOfBlack < numberOfWhite) {
+                winner = "WHITE";
+                winner(new Stage());
+            } else if (availableMoves == 0 && numberOfBlack > numberOfWhite) {
+                winner = "BLACK";
+                winner(new Stage());
+            } else if (availableMoves == 0 && numberOfBlack == numberOfWhite) {
+                winner = "NOBODY";
+                winner(new Stage());
+            }
+            clickCount--;
         } else {
             View.pass.setDisable(true);
         }
@@ -462,4 +484,5 @@ public class Model {
         View.whiteWinCounter.setText("" + whiteWinCounter2);
         View.blackWinCounter.setText("" + blackWinCounter2);
     }
+
 }
