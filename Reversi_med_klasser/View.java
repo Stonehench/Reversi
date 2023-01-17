@@ -1,4 +1,3 @@
-package JanuarProject;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -50,6 +49,7 @@ public class View extends Application {
 	static Button restart = new Button("Restart game");
 	static Button replay = new Button("Replay");
 	static Button mute = new Button("SoundFX: on");
+    static Button backToMenu = new Button("Back to menu");
 	static GridPane root = new GridPane();
 	Scene scene = new Scene(root, Model.windowSize + (Model.windowSize / 2), Model.windowSize);
 	static Timeline whiteTimeLine = new Timeline();
@@ -156,7 +156,20 @@ public class View extends Application {
 				mute.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
 				root.add(mute, Model.gridSize, i);
 				GridPane.setConstraints(mute, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
-			} else if (i >= 0) {
+			}else if (i == Model.gridSize - 3) {
+
+				// back button
+                backToMenu.setPrefSize((Model.windowSize / 4) - (Model.gridSize * 2.5),
+						Model.butSize - (Model.gridSize * 2.5)); // Size of the button
+                        backToMenu.setStyle("-fx-base: white;"); // Button color
+                        backToMenu.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
+				root.add(backToMenu, Model.gridSize, i);
+				GridPane.setConstraints(backToMenu, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
+
+            
+
+
+			}else if (i >= 0) {
 				MyButton emptySpace = new MyButton(0);
 				emptySpace.setPrefSize(Model.windowSize / 4, Model.butSize);
 				emptySpace.setVisible(false);
@@ -287,6 +300,15 @@ public class View extends Application {
 						menuStage.close();
 					}
 				});
+               
+                backToMenu.setOnAction(new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent event) {
+                        menuStage.show();
+                        primaryStage.close();
+                    }
+                });
 
         ScaleTransition rulesButten = new ScaleTransition(Duration.millis(300), rules);
         rulesButten.setFromX(1);
