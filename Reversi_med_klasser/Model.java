@@ -267,42 +267,42 @@ public class Model {
         // If true then it calls the method to change the pieces
         // Repeats in all 8 directions
         if (cell[right][down].getMyValue() == turn * -1) {
-            if (line(cell, right, down, x, y) == true) {
+            if (line(cell, right, down, x, y)) {
                 changePiece(cell, right, down, x, y);
             }
         }
         if (cell[right][y].getMyValue() == turn * -1) {
-            if (line(cell, right, y, x, y) == true) {
+            if (line(cell, right, y, x, y)) {
                 changePiece(cell, right, y, x, y);
             }
         }
         if (cell[right][up].getMyValue() == turn * -1) {
-            if (line(cell, right, up, x, y) == true) {
+            if (line(cell, right, up, x, y)) {
                 changePiece(cell, right, up, x, y);
             }
         }
         if (cell[x][down].getMyValue() == turn * -1) {
-            if (line(cell, x, down, x, y) == true) {
+            if (line(cell, x, down, x, y)) {
                 changePiece(cell, x, down, x, y);
             }
         }
         if (cell[x][up].getMyValue() == turn * -1) {
-            if (line(cell, x, up, x, y) == true) {
+            if (line(cell, x, up, x, y)) {
                 changePiece(cell, x, up, x, y);
             }
         }
         if (cell[left][down].getMyValue() == turn * -1) {
-            if (line(cell, left, down, x, y) == true) {
+            if (line(cell, left, down, x, y)) {
                 changePiece(cell, left, down, x, y);
             }
         }
         if (cell[left][y].getMyValue() == turn * -1) {
-            if (line(cell, left, y, x, y) == true) {
+            if (line(cell, left, y, x, y)) {
                 changePiece(cell, left, y, x, y);
             }
         }
         if (cell[left][up].getMyValue() == turn * -1) {
-            if (line(cell, left, up, x, y) == true) {
+            if (line(cell, left, up, x, y)) {
                 changePiece(cell, left, up, x, y);
             }
 
