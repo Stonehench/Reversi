@@ -1,4 +1,4 @@
-package reversi_projekt_færdigt;
+package completeReversiGame;
 
 import javafx.animation.FillTransition;
 import javafx.animation.RotateTransition;
@@ -25,9 +25,9 @@ public class Model {
     static int numberOfBlack;
     static int turn;
     static int blackTimer = 59; 
-    static int blackMinut = 1; 
+    static int blackMinut = 5; 
     static int whiteTimer = 59; 
-    static int whiteMinut = 1; 
+    static int whiteMinut = 5; 
     static int clickedMute;
     static int whiteWinCounter2 = 0;
     static int blackWinCounter2 = 0;

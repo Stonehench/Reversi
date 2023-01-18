@@ -1,4 +1,4 @@
-package reversi_projekt_færdigt;
+package completeReversiGame;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -485,7 +485,7 @@ public class View extends Application {
 
 
 		// Time counter speed-settings:
-		double countSpeedRate = 0.01; // 1 = normal, 0.05 = fast, 2 = slow
+		double countSpeedRate = 1; // 1 = normal, 0.05 = fast, 2 = slow
 
 
 		// Create a TimeLine for white
@@ -509,13 +509,10 @@ public class View extends Application {
 								Model.winner(new Stage());
 								whiteTimeLine.stop();	
 							}
-
 						Model.whiteMinut--;
 						System.out.println("hvid minut: " + Model.whiteMinut);
 						Model.whiteTimer = 59; 
 					}
-					
-					
 				}));
 		whiteTimeLine.setCycleCount(Timeline.INDEFINITE);
 
@@ -544,7 +541,6 @@ public class View extends Application {
 							Model.winner(new Stage());
 							blackTimeLine.stop();	
 						}
-
 						Model.blackMinut--;
 						System.out.println("sort minut: " + Model.blackMinut);
 						Model.blackTimer = 59; 

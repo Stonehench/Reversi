@@ -1,4 +1,4 @@
-package reversi_projekt_færdigt;
+package completeReversiGame;
 
 import java.io.File;
 
