@@ -16,6 +16,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -240,7 +245,11 @@ public class View extends Application {
 		Model.startFour();
 
 		// Constructs pane
-		root.setStyle("-fx-background-color: #33CC66;"); // Sets backgground color
+
+        Image image5 = new Image(new File(
+                "lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
+        root.setBackground(new Background(new BackgroundImage(image5, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+      
 
 		// Makes CSS and sidepane possible
 		scene.getStylesheets().add(getClass().getResource("Reversi.css").toExternalForm());
