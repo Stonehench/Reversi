@@ -2,7 +2,6 @@ package completeReversiGame;
 
 import java.io.File;
 import java.net.MalformedURLException;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
@@ -492,7 +491,7 @@ public class View extends Application {
 		primaryStage.setResizable(false);
 
 		// Time counter speed-settings:
-		double countSpeedRate = 1; // 1 = normal, 0.05 = fast, 2 = slow
+		double countSpeedRate = 0.05; // 1 = normal, 0.05 = fast, 2 = slow
 
 		// Create a TimeLine for white
 		whiteTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
@@ -549,13 +548,13 @@ public class View extends Application {
 							View.blackTimeLine.stop();
 							Model.winner = "WHITE";
 							Model.winner(new Stage());
-
 						}
 
 						Model.blackMinut--;
 						System.out.println("sort minut: " + Model.blackMinut);
 						Model.blackTimer = 59;
 					}
+					
 
 				}));
 		blackTimeLine.setCycleCount(Timeline.INDEFINITE);

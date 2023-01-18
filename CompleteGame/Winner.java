@@ -1,5 +1,4 @@
-package Demonstration;
-
+package completeReversiGame;
 import java.io.File;
 
 import javafx.application.Application;
@@ -54,6 +53,7 @@ public class Winner extends Application{
         closeButton.setStyle("-fx-background-color: linear-gradient(to bottom, gold, goldenrod);");
 
         closeButton.setOnAction(event -> {
+        	Model.winnerFound = false;
             if (Model.winner.equals("BLACK")) {
                 Model.blackWinCounter2++;
             } else if (Model.winner.equals("WHITE")) {
