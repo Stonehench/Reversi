@@ -1,4 +1,4 @@
-package JanuarProject;
+package completeReversiGame;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

@@ -1,4 +1,4 @@
-package JanuarProject;
+package completeReversiGame;
 
 import javafx.animation.FillTransition;
 import javafx.animation.RotateTransition;
@@ -35,6 +35,7 @@ public class Model {
     static int whiteValue;
     static int numberOfBoards;
     static boolean soundOn = true;
+    static boolean winnerFound = false;
     static String winner = "";
 
     public static void placePiece(MyButton clickedButton) {
@@ -374,9 +375,13 @@ public class Model {
                 }
             }
             System.out.println("available moves "+availableMoves);
+            
+            
+            //Winner conditions for when board is NOT full
             if (availableMoves == 0 && numberOfBlack < numberOfWhite && fullBoard != 0) {
                 winner = "WHITE";
                 winner(new Stage());
+                
             } else if (availableMoves == 0 && numberOfBlack > numberOfWhite && fullBoard != 0) {
                 winner = "BLACK";
                 winner(new Stage());
@@ -388,6 +393,8 @@ public class Model {
         } else {
             View.pass.setDisable(true);
         }
+        
+        //Winner conditions for full board
         if (numberOfWhite == 0) {
             winner = "BLACK";
             winner(new Stage());
@@ -396,7 +403,7 @@ public class Model {
             winner = "WHITE";
             winner(new Stage());
         }
-        if (fullBoard == 0 && numberOfBlack > numberOfWhite) {
+        if (fullBoard == 0 && numberOfBlack > numberOfWhite) {        	
             winner = "BLACK";
             winner(new Stage());
         } else if (fullBoard == 0 && numberOfBlack < numberOfWhite) {
@@ -411,6 +418,7 @@ public class Model {
         
     }
 
+    
     // Highlights player turn in label
     public static void focusPlayer() {
         if (clickCount % 2 != 0) {
@@ -446,6 +454,7 @@ public class Model {
 
     // Pops up with a little window declaring the winner
     public static void winner(Stage winStage) {
+    	winnerFound = true;
         new Winner().start(winStage);
     }
 

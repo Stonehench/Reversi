@@ -1,4 +1,4 @@
-package JanuarProject;
+package completeReversiGame;
 
 import javafx.scene.control.Button;
 
@@ -10,7 +10,7 @@ class MyButton extends Button {
 		this.MyValue = MyValue;
 	}
 
-    // A method to get the value of a button
+	// A method to get the value of a button
 	public int getMyValue() {
 		return MyValue;
 	}
