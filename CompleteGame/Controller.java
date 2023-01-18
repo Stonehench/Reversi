@@ -1,6 +1,7 @@
-package completeReversiGame;
+package JanuarProject;
 
 import java.io.File;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.GridPane;
@@ -48,22 +49,20 @@ public class Controller {
                             View.blackScore.setText("Black score " + Model.numberOfBlack);
                             Model.focusPlayer();
 
+                            if(!(Model.winner.equals(""))){
+                                View.whiteTimeLine.stop();
+                                View.blackTimeLine.stop();
+                            }
                             // Whites turn
-                            if (Model.clickCount % 2 != 0) {
+                            else if (Model.clickCount % 2 != 0) {
                                 View.whiteScore.setFont(View.bold);
                                 View.blackScore.setFont(View.normal);
                                 View.timeDisplayWhite.setFont(View.bold);
                                 View.timeDisplayBlack.setFont(View.normal);
-                               
-                                
-                                //Stops time when winner found
-                                if(Model.winnerFound == true) {
-                                	View.whiteTimeLine.stop();
-                                	View.blackTimeLine.stop();
-                                } else {
-                                	 View.whiteTimeLine.play();
-                                     View.blackTimeLine.stop();
-                                }
+
+                                System.out.println("White counter started: ");
+                                View.whiteTimeLine.play();
+                                View.blackTimeLine.stop();
 
                             }
                             // Blacks turn
@@ -72,17 +71,10 @@ public class Controller {
                                 View.blackScore.setFont(View.bold);
                                 View.timeDisplayWhite.setFont(View.normal);
                                 View.timeDisplayBlack.setFont(View.bold);
-                                
-                                
-                                //Stops time when winner found
-                                if(Model.winnerFound == true) {
-                               	 View.whiteTimeLine.stop();
-                                 View.blackTimeLine.stop();
-                               }else {
-                            	   View.blackTimeLine.play();
-                                   View.whiteTimeLine.stop();
-                               }
 
+                                System.out.println("Black counter started: ");
+                                View.blackTimeLine.play();
+                                View.whiteTimeLine.stop();
 
                             }
 
@@ -144,8 +136,7 @@ public class Controller {
         View.restart.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-            	Model.restartGame(View.buttons2D);
-            	
+                Model.restartGame(View.buttons2D);
             }
         });
 

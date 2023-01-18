@@ -1,7 +1,8 @@
-package completeReversiGame;
+package JanuarProject;
 
 import java.io.File;
 import java.net.MalformedURLException;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
@@ -234,7 +235,7 @@ public class View extends Application {
 
 		// Constructs background
 		Image image5 = new Image(new File(
-				"Adlon3_Amerikansk-Valdnød.jpg").toURI().toString());
+				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
 		root.setBackground(new Background(new BackgroundImage(image5,
 				BackgroundRepeat.REPEAT,
 				BackgroundRepeat.REPEAT,
@@ -250,7 +251,7 @@ public class View extends Application {
 	@Override
 	public void start(Stage primaryStage) throws MalformedURLException {
 		Image image = new Image(new File(
-				"reversi-game.jpg").toURI().toString());
+				"lib/billeder/reversi-game.jpg").toURI().toURL().toString());
 		ImageView imageView = new ImageView(image);
 		pane.getChildren().add(imageView);
 
@@ -371,7 +372,7 @@ public class View extends Application {
 
 		Pane gamerulesPane = new Pane();
 		Image image2 = new Image(new File(
-				"Reversi-start.png").toURI().toString());
+				"lib/billeder/Reversi-start.png").toURI().toURL().toString());
 		ImageView imageView2 = new ImageView(image2);
 		gamerulesPane.getChildren().add(imageView2);
 		imageView2.setFitWidth(250);
@@ -380,7 +381,7 @@ public class View extends Application {
 		imageView2.setLayoutY(gamerulesPane.getHeight() + 225);
 
 		Image image3 = new Image(new File(
-				"Reversi-startv2.png").toURI().toString());
+				"lib/billeder/Reversi-startv2.png").toURI().toURL().toString());
 		ImageView imageView3 = new ImageView(image3);
 		gamerulesPane.getChildren().add(imageView3);
 		imageView3.setFitWidth(250);
@@ -433,7 +434,7 @@ public class View extends Application {
 		Pane gamerulesPane2 = new Pane();
 
 		Image image4 = new Image(new File(
-				"Reversi-arrows.png").toURI().toString());
+				"lib/billeder/Reversi-arrows.png").toURI().toURL().toString());
 		ImageView imageView4 = new ImageView(image4);
 		gamerulesPane2.getChildren().add(imageView4);
 		imageView4.setFitWidth(550);
@@ -491,7 +492,7 @@ public class View extends Application {
 		primaryStage.setResizable(false);
 
 		// Time counter speed-settings:
-		double countSpeedRate = 0.05; // 1 = normal, 0.05 = fast, 2 = slow
+		double countSpeedRate = 1; // 1 = normal, 0.05 = fast, 2 = slow
 
 		// Create a TimeLine for white
 		whiteTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
@@ -504,18 +505,16 @@ public class View extends Application {
 
 					// Displays and updates time
 					timeDisplayWhite.textProperty()
-					.bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer--));
+							.bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer--));
 
 					// Count down of white timer
-					if (Model.whiteTimer <= 0) {
+					if (Model.whiteTimer == 0) {
 
 						// Winner decision: white time runs out -> black wins
-						if (Model.whiteMinut == 0 && Model.whiteTimer <= 0) {
-							View.whiteTimeLine.stop();
-							View.blackTimeLine.stop();
+						if (Model.whiteMinut == 0 && Model.whiteTimer == 0) {
 							Model.winner = "BLACK";
 							Model.winner(new Stage());
-
+							whiteTimeLine.stop();
 						}
 
 						Model.whiteMinut--;
@@ -537,24 +536,22 @@ public class View extends Application {
 
 					// Displays and updates time
 					timeDisplayBlack.textProperty()
-					.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer--));
+							.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer--));
 
 					// Count down of black timer
-					if (Model.blackTimer <= 0) {
+					if (Model.blackTimer == 0) {
 
 						// Winner decision: black time runs out -> white wins
-						if (Model.blackMinut == 0 && Model.blackTimer <= 0) {
-							View.whiteTimeLine.stop();
-							View.blackTimeLine.stop();
+						if (Model.blackMinut == 0 && Model.blackTimer == 0) {
 							Model.winner = "WHITE";
 							Model.winner(new Stage());
+							blackTimeLine.stop();
 						}
 
 						Model.blackMinut--;
 						System.out.println("sort minut: " + Model.blackMinut);
 						Model.blackTimer = 59;
 					}
-					
 
 				}));
 		blackTimeLine.setCycleCount(Timeline.INDEFINITE);
