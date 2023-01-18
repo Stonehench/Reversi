@@ -1,4 +1,4 @@
-package JanuarProject;
+package reversi_projekt_færdigt;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -17,11 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -80,13 +75,14 @@ public class View extends Application {
 	Scene menuScene = new Scene(pane, 1200, 625);
 	static Stage menuStage = new Stage();
 
+
 	public View() throws Exception {
 		normal = Font.font(normal.getFamily(), FontWeight.NORMAL, normal.getSize());
 		bold = Font.font(bold.getFamily(), FontWeight.BOLD, bold.getSize());
 
 		// The display of Labels "White score" and "Black score" and all the buttons
-		timeDisplayWhite = new Label(" Time: 10:00 ");
-		timeDisplayBlack = new Label(" Time: 10:00 ");
+		timeDisplayWhite = new Label(" Time: 05:00 ");
+		timeDisplayBlack = new Label(" Time: 05:00 ");
 
 		// Creates the first column of the menu on the right
 		for (int i = 0; i < Model.gridSize; i++) {
@@ -162,7 +158,7 @@ public class View extends Application {
 				mute.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
 				root.add(mute, Model.gridSize, i);
 				GridPane.setConstraints(mute, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
-			} else if (i == Model.gridSize - 3) {
+			}else if (i == Model.gridSize - 3) {
 
 				// back button
 				backToMenu.setPrefSize((Model.windowSize / 4) - (Model.gridSize * 2.5),
@@ -172,7 +168,10 @@ public class View extends Application {
 				root.add(backToMenu, Model.gridSize, i);
 				GridPane.setConstraints(backToMenu, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
 
-			} else if (i >= 0) {
+
+
+
+			}else if (i >= 0) {
 				MyButton emptySpace = new MyButton(0);
 				emptySpace.setPrefSize(Model.windowSize / 4, Model.butSize);
 				emptySpace.setVisible(false);
@@ -233,14 +232,8 @@ public class View extends Application {
 		// Constructs the default 4 pieces in the center of Board
 		Model.startFour();
 
-		// Constructs background
-		Image image5 = new Image(new File(
-				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
-		root.setBackground(new Background(new BackgroundImage(image5,
-				BackgroundRepeat.REPEAT,
-				BackgroundRepeat.REPEAT,
-				BackgroundPosition.DEFAULT,
-				new BackgroundSize(1.0, 1.0, true, true, false, false))));
+		// Constructs pane
+		root.setStyle("-fx-background-color: #33CC66;"); // Sets backgground color
 
 		// Makes CSS and sidepane possible
 		scene.getStylesheets().add(getClass().getResource("Reversi.css").toExternalForm());
@@ -485,54 +478,80 @@ public class View extends Application {
 		intro.setVolume(0.1);
 		intro.play();
 
+		
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Reversi");
 		primaryStage.setResizable(false);
 
+
 		// Time counter speed-settings:
-		double countSpeedRate = 0.6; // 1 = normal, < 1 = faster, > 1 = slower
+		double countSpeedRate = 0.01; // 1 = normal, 0.05 = fast, 2 = slow
+
 
 		// Create a TimeLine for white
 		whiteTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
 				event -> {
 
-					// Start value for count down
-					if (Model.whiteMinut == 10) {
-						Model.whiteMinut = 9;
+					//Start value for count down
+					if(Model.whiteMinut == 5) {
+						Model.whiteMinut = 4;
 					}
 
 					// Displays and updates time
-					timeDisplayWhite.textProperty()
-							.bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer--));
+					timeDisplayWhite.textProperty().bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer--)); 
 
 					// Count down of white timer
 					if (Model.whiteTimer == 0) {
+
+						//Winner decision: white time runs out -> black wins
+							if(Model.whiteMinut == 0 && Model.whiteTimer == 0) {
+								Model.winner = "BLACK";
+								Model.winner(new Stage());
+								whiteTimeLine.stop();	
+							}
+
 						Model.whiteMinut--;
 						System.out.println("hvid minut: " + Model.whiteMinut);
-						Model.whiteTimer = 59; // Reset seconds to 00
+						Model.whiteTimer = 59; 
 					}
+					
+					
 				}));
 		whiteTimeLine.setCycleCount(Timeline.INDEFINITE);
 
-		// Create a TimeLine for white
+
+
+		// Create a TimeLine for black
 		blackTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
 				event -> {
 
-					// Start value for count down
-					if (Model.blackMinut == 10) {
-						Model.blackMinut = 9;
+					//Start value for count down
+					if(Model.blackMinut == 5) {
+						Model.blackMinut = 4;
 					}
 
 					// Displays and updates time
 					timeDisplayBlack.textProperty()
-							.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer--));
+					.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer--));
 
-					// Count down of black timer
+
+					//Count down of black timer
 					if (Model.blackTimer == 0) {
+						
+						//Winner decision: black time runs out -> white wins
+						if(Model.blackMinut == 0 && Model.blackTimer == 0) {
+							Model.winner = "WHITE";
+							Model.winner(new Stage());
+							blackTimeLine.stop();	
+						}
+
 						Model.blackMinut--;
 						System.out.println("sort minut: " + Model.blackMinut);
-						Model.blackTimer = 59; // Reset seconds to 00
+						Model.blackTimer = 59; 
 					}
+
+
+
 				}));
 		blackTimeLine.setCycleCount(Timeline.INDEFINITE);
 

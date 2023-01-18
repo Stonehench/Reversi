@@ -24,10 +24,10 @@ public class Model {
     static int numberOfWhite;
     static int numberOfBlack;
     static int turn;
-    static int blackTimer = 59;
-    static int blackMinut = 10;
-    static int whiteTimer = 59;
-    static int whiteMinut = 10;
+    static int blackTimer = 59; 
+    static int blackMinut = 1; 
+    static int whiteTimer = 59; 
+    static int whiteMinut = 1; 
     static int clickedMute;
     static int whiteWinCounter2 = 0;
     static int blackWinCounter2 = 0;
@@ -406,6 +406,9 @@ public class Model {
             winner = "NOBODY";
             winner(new Stage());
         }
+        
+        
+        
     }
 
     // Highlights player turn in label
@@ -455,17 +458,17 @@ public class Model {
         blackValue = 2;
         whiteValue = 2;
         blackTimer = 59; // new
-        blackMinut = 10; // new
+        blackMinut = 5; // new
         whiteTimer = 59; // new
-        whiteMinut = 10; // new
+        whiteMinut = 5; // new
 
         // Reset time display
         View.whiteTimeLine.stop();
         View.blackTimeLine.stop();
         View.timeDisplayWhite.textProperty().unbind();
         View.timeDisplayBlack.textProperty().unbind();
-        View.timeDisplayWhite.setText(" Time: 10:00 ");
-        View.timeDisplayBlack.setText(" Time: 10:00 ");
+        View.timeDisplayWhite.setText(" Time: 05:00 ");
+        View.timeDisplayBlack.setText(" Time: 05:00 ");
 
         // Update GUI to reflect reset game state
         View.blackScore.setText("Black Score: 2");
