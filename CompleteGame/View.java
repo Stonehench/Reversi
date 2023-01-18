@@ -1,4 +1,4 @@
-package completeReversiGame;
+package JanuarProject;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -17,6 +17,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -74,7 +79,6 @@ public class View extends Application {
 	static Pane pane = new Pane();
 	Scene menuScene = new Scene(pane, 1200, 625);
 	static Stage menuStage = new Stage();
-
 
 	public View() throws Exception {
 		normal = Font.font(normal.getFamily(), FontWeight.NORMAL, normal.getSize());
@@ -158,7 +162,7 @@ public class View extends Application {
 				mute.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
 				root.add(mute, Model.gridSize, i);
 				GridPane.setConstraints(mute, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
-			}else if (i == Model.gridSize - 3) {
+			} else if (i == Model.gridSize - 3) {
 
 				// back button
 				backToMenu.setPrefSize((Model.windowSize / 4) - (Model.gridSize * 2.5),
@@ -168,10 +172,7 @@ public class View extends Application {
 				root.add(backToMenu, Model.gridSize, i);
 				GridPane.setConstraints(backToMenu, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
 
-
-
-
-			}else if (i >= 0) {
+			} else if (i >= 0) {
 				MyButton emptySpace = new MyButton(0);
 				emptySpace.setPrefSize(Model.windowSize / 4, Model.butSize);
 				emptySpace.setVisible(false);
@@ -232,8 +233,14 @@ public class View extends Application {
 		// Constructs the default 4 pieces in the center of Board
 		Model.startFour();
 
-		// Constructs pane
-		root.setStyle("-fx-background-color: #33CC66;"); // Sets backgground color
+		// Constructs background
+		Image image5 = new Image(new File(
+				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
+		root.setBackground(new Background(new BackgroundImage(image5,
+				BackgroundRepeat.REPEAT,
+				BackgroundRepeat.REPEAT,
+				BackgroundPosition.DEFAULT,
+				new BackgroundSize(1.0, 1.0, true, true, false, false))));
 
 		// Makes CSS and sidepane possible
 		scene.getStylesheets().add(getClass().getResource("Reversi.css").toExternalForm());
@@ -244,7 +251,7 @@ public class View extends Application {
 	@Override
 	public void start(Stage primaryStage) throws MalformedURLException {
 		Image image = new Image(new File(
-				"reversi-game.jpg").toURI().toString());
+				"lib/billeder/reversi-game.jpg").toURI().toURL().toString());
 		ImageView imageView = new ImageView(image);
 		pane.getChildren().add(imageView);
 
@@ -290,6 +297,8 @@ public class View extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				primaryStage.show();
+				Model.gameCounter--;
+				Model.restartGame(buttons2D);
 				menuStage.close();
 			}
 		});
@@ -363,7 +372,7 @@ public class View extends Application {
 
 		Pane gamerulesPane = new Pane();
 		Image image2 = new Image(new File(
-				"Reversi-start.png").toURI().toString());
+				"lib/billeder/Reversi-start.png").toURI().toURL().toString());
 		ImageView imageView2 = new ImageView(image2);
 		gamerulesPane.getChildren().add(imageView2);
 		imageView2.setFitWidth(250);
@@ -372,7 +381,7 @@ public class View extends Application {
 		imageView2.setLayoutY(gamerulesPane.getHeight() + 225);
 
 		Image image3 = new Image(new File(
-				"Reversi-startv2.png").toURI().toString());
+				"lib/billeder/Reversi-startv2.png").toURI().toURL().toString());
 		ImageView imageView3 = new ImageView(image3);
 		gamerulesPane.getChildren().add(imageView3);
 		imageView3.setFitWidth(250);
@@ -425,7 +434,7 @@ public class View extends Application {
 		Pane gamerulesPane2 = new Pane();
 
 		Image image4 = new Image(new File(
-				"Reversi-arrows.png").toURI().toString());
+				"lib/billeder/Reversi-arrows.png").toURI().toURL().toString());
 		ImageView imageView4 = new ImageView(image4);
 		gamerulesPane2.getChildren().add(imageView4);
 		imageView4.setFitWidth(550);
@@ -478,75 +487,71 @@ public class View extends Application {
 		intro.setVolume(0.1);
 		intro.play();
 
-		
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Reversi");
 		primaryStage.setResizable(false);
 
-
 		// Time counter speed-settings:
 		double countSpeedRate = 1; // 1 = normal, 0.05 = fast, 2 = slow
-
 
 		// Create a TimeLine for white
 		whiteTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
 				event -> {
 
-					//Start value for count down
-					if(Model.whiteMinut == 5) {
+					// Start value for count down
+					if (Model.whiteMinut == 5) {
 						Model.whiteMinut = 4;
 					}
 
 					// Displays and updates time
-					timeDisplayWhite.textProperty().bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer--)); 
+					timeDisplayWhite.textProperty()
+							.bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer--));
 
 					// Count down of white timer
 					if (Model.whiteTimer == 0) {
 
-						//Winner decision: white time runs out -> black wins
-							if(Model.whiteMinut == 0 && Model.whiteTimer == 0) {
-								Model.winner = "BLACK";
-								Model.winner(new Stage());
-								whiteTimeLine.stop();	
-							}
+						// Winner decision: white time runs out -> black wins
+						if (Model.whiteMinut == 0 && Model.whiteTimer == 0) {
+							Model.winner = "BLACK";
+							Model.winner(new Stage());
+							whiteTimeLine.stop();
+						}
+
 						Model.whiteMinut--;
 						System.out.println("hvid minut: " + Model.whiteMinut);
-						Model.whiteTimer = 59; 
+						Model.whiteTimer = 59;
 					}
+
 				}));
 		whiteTimeLine.setCycleCount(Timeline.INDEFINITE);
-
-
 
 		// Create a TimeLine for black
 		blackTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
 				event -> {
 
-					//Start value for count down
-					if(Model.blackMinut == 5) {
+					// Start value for count down
+					if (Model.blackMinut == 5) {
 						Model.blackMinut = 4;
 					}
 
 					// Displays and updates time
 					timeDisplayBlack.textProperty()
-					.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer--));
+							.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer--));
 
-
-					//Count down of black timer
+					// Count down of black timer
 					if (Model.blackTimer == 0) {
-						
-						//Winner decision: black time runs out -> white wins
-						if(Model.blackMinut == 0 && Model.blackTimer == 0) {
+
+						// Winner decision: black time runs out -> white wins
+						if (Model.blackMinut == 0 && Model.blackTimer == 0) {
 							Model.winner = "WHITE";
 							Model.winner(new Stage());
-							blackTimeLine.stop();	
+							blackTimeLine.stop();
 						}
+
 						Model.blackMinut--;
 						System.out.println("sort minut: " + Model.blackMinut);
-						Model.blackTimer = 59; 
+						Model.blackTimer = 59;
 					}
-
-
 
 				}));
 		blackTimeLine.setCycleCount(Timeline.INDEFINITE);

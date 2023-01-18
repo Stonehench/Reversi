@@ -1,4 +1,4 @@
-package completeReversiGame;
+package JanuarProject;
 
 import javafx.animation.FillTransition;
 import javafx.animation.RotateTransition;

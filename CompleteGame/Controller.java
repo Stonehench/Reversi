@@ -1,4 +1,4 @@
-package completeReversiGame;
+package JanuarProject;
 
 import java.io.File;
 
@@ -118,6 +118,7 @@ public class Controller {
                     View.playerTurn = "white";
                     Model.highlight();
                     Model.focusPlayer();
+
                 } else {
                     View.playerTurn = "black";
                     Model.clickCount++;
@@ -135,69 +136,57 @@ public class Controller {
             }
         });
 
-        Menu.Next.setOnAction(new EventHandler<ActionEvent>() {
+        View.Next.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                Menu.Gamerules2.show();
-                Menu.Gamerules.close();
+                View.Gamerules2.show();
+                View.Gamerules.close();
             }
         });
 
-        Menu.back.setOnAction(new EventHandler<ActionEvent>() {
+        View.back.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                Menu.Gamerules.show();
-                Menu.Gamerules2.close();
+                View.Gamerules.show();
+                View.Gamerules2.close();
             }
         });
 
-        Menu.BacktoMenu2.setOnAction(new EventHandler<ActionEvent>() {
+        View.BacktoMenu2.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                Menu.menuStage.show();
-                Menu.Gamerules2.close();
+                View.menuStage.show();
+                View.Gamerules2.close();
             }
         });
 
-        Menu.BacktoMenu.setOnAction(new EventHandler<ActionEvent>() {
+        View.BacktoMenu.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                Menu.menuStage.show();
-                Menu.Gamerules.close();
+                View.menuStage.show();
+                View.Gamerules.close();
             }
         });
 
-        Menu.startGame.setOnAction(new EventHandler<ActionEvent>() {
+        View.rules.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-            	//View.primaryStageVar.setScene(View.saveScene);
-            	//View.primaryStageVar.show();
-            	Menu.menuStage.close();
-            }
-        });
-
-        Menu.rules.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                Menu.Gamerules.show();
-                Menu.menuStage.close();
+                View.Gamerules.show();
+                View.menuStage.close();
             }
         });
         // Exit game when clicked
-        Menu.exit.setOnAction(new EventHandler<ActionEvent>() {
+        View.exit.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                Menu.menuStage.close();
+                View.menuStage.close();
             }
         });
-
     }
-
 }
