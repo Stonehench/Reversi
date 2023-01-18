@@ -505,16 +505,18 @@ public class View extends Application {
 
 					// Displays and updates time
 					timeDisplayWhite.textProperty()
-							.bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer--));
+					.bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer--));
 
 					// Count down of white timer
-					if (Model.whiteTimer == 0) {
+					if (Model.whiteTimer <= 0) {
 
 						// Winner decision: white time runs out -> black wins
-						if (Model.whiteMinut == 0 && Model.whiteTimer == 0) {
+						if (Model.whiteMinut == 0 && Model.whiteTimer <= 0) {
+							View.whiteTimeLine.stop();
+							View.blackTimeLine.stop();
 							Model.winner = "BLACK";
 							Model.winner(new Stage());
-						
+
 						}
 
 						Model.whiteMinut--;
@@ -536,16 +538,18 @@ public class View extends Application {
 
 					// Displays and updates time
 					timeDisplayBlack.textProperty()
-							.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer--));
+					.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer--));
 
 					// Count down of black timer
-					if (Model.blackTimer == 0) {
+					if (Model.blackTimer <= 0) {
 
 						// Winner decision: black time runs out -> white wins
-						if (Model.blackMinut == 0 && Model.blackTimer == 0) {
+						if (Model.blackMinut == 0 && Model.blackTimer <= 0) {
+							View.whiteTimeLine.stop();
+							View.blackTimeLine.stop();
 							Model.winner = "WHITE";
 							Model.winner(new Stage());
-							
+
 						}
 
 						Model.blackMinut--;
