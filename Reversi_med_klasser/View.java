@@ -1,4 +1,5 @@
 
+
 import java.io.File;
 import java.net.MalformedURLException;
 
@@ -14,6 +15,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -54,7 +56,7 @@ public class View extends Application {
 	static Button restart = new Button("Restart game");
 	static Button replay = new Button("Replay");
 	static Button mute = new Button("SoundFX: on");
-    static Button backToMenu = new Button("Back to menu");
+	static Button backToMenu = new Button("Back to menu");
 	static GridPane root = new GridPane();
 	Scene scene = new Scene(root, Model.windowSize + (Model.windowSize / 2), Model.windowSize);
 	static Timeline whiteTimeLine = new Timeline();
@@ -62,30 +64,30 @@ public class View extends Application {
 	static Label timeDisplayWhite = new Label();
 	static Label timeDisplayBlack = new Label();
 	static Media media = new Media(new File("Intro-Reversi.wav").toURI().toString());
-    static MediaPlayer intro = new MediaPlayer(media);
+	static MediaPlayer intro = new MediaPlayer(media);
 	static MediaPlayer legalMoveSound = new MediaPlayer(media);
 	static MediaPlayer IllegalMoveSound = new MediaPlayer(media);
 
 	static Stage Gamerules = new Stage();
-    static Stage Gamerules2 = new Stage();
-    static Button startGame = new Button();
-    static Button rules = new Button();
-    static Button exit = new Button();
-    static Button BacktoMenu = new Button();
-    static Button BacktoMenu2 = new Button();
-    static Button Next = new Button();
-    static Button back = new Button("Back");
-    static Pane pane = new Pane();
-    Scene menuScene = new Scene(pane, 1200, 675);
-    static Stage menuStage = new Stage();
+	static Stage Gamerules2 = new Stage();
+	static Button startGame = new Button();
+	static Button rules = new Button();
+	static Button exit = new Button();
+	static Button BacktoMenu = new Button();
+	static Button BacktoMenu2 = new Button();
+	static Button Next = new Button();
+	static Button back = new Button("Back");
+	static Pane pane = new Pane();
+	Scene menuScene = new Scene(pane, 1200, 625);
+	static Stage menuStage = new Stage();
 
 	public View() throws Exception {
 		normal = Font.font(normal.getFamily(), FontWeight.NORMAL, normal.getSize());
 		bold = Font.font(bold.getFamily(), FontWeight.BOLD, bold.getSize());
 
 		// The display of Labels "White score" and "Black score" and all the buttons
-		timeDisplayWhite = new Label(" Time: 00:00 ");
-		timeDisplayBlack = new Label(" Time: 00:00 ");
+		timeDisplayWhite = new Label(" Time: 05:00 ");
+		timeDisplayBlack = new Label(" Time: 05:00 ");
 
 		// Creates the first column of the menu on the right
 		for (int i = 0; i < Model.gridSize; i++) {
@@ -161,20 +163,17 @@ public class View extends Application {
 				mute.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
 				root.add(mute, Model.gridSize, i);
 				GridPane.setConstraints(mute, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
-			}else if (i == Model.gridSize - 3) {
+			} else if (i == Model.gridSize - 3) {
 
 				// back button
-                backToMenu.setPrefSize((Model.windowSize / 4) - (Model.gridSize * 2.5),
+				backToMenu.setPrefSize((Model.windowSize / 4) - (Model.gridSize * 2.5),
 						Model.butSize - (Model.gridSize * 2.5)); // Size of the button
-                        backToMenu.setStyle("-fx-base: white;"); // Button color
-                        backToMenu.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
+				backToMenu.setStyle("-fx-base: white;"); // Button color
+				backToMenu.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
 				root.add(backToMenu, Model.gridSize, i);
 				GridPane.setConstraints(backToMenu, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
 
-            
-
-
-			}else if (i >= 0) {
+			} else if (i >= 0) {
 				MyButton emptySpace = new MyButton(0);
 				emptySpace.setPrefSize(Model.windowSize / 4, Model.butSize);
 				emptySpace.setVisible(false);
@@ -204,15 +203,6 @@ public class View extends Application {
 				blackWinCounter.setFont(numberFont);
 				root.add(blackCircleNText, Model.gridSize + 1, i);
 				GridPane.setConstraints(blackCircleNText, Model.gridSize + 1, i, 1, 1, HPos.CENTER, VPos.CENTER);
-			} else if (i == Model.gridSize - 1) {
-				// Replay button
-				replay.setPrefSize((Model.windowSize / 4) - (Model.gridSize * 2.5),
-						Model.butSize - (Model.gridSize * 2.5)); // Size of the //
-				// // button
-				replay.setStyle("-fx-base: white;"); // Button color
-				replay.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
-				root.add(replay, Model.gridSize, i);
-				GridPane.setConstraints(replay, Model.gridSize + 1, i, 1, 1, HPos.CENTER, VPos.CENTER);
 			} else if (i >= 0) {
 				MyButton emptySpace = new MyButton(0);
 				emptySpace.setPrefSize(Model.windowSize / 4, Model.butSize);
@@ -244,12 +234,14 @@ public class View extends Application {
 		// Constructs the default 4 pieces in the center of Board
 		Model.startFour();
 
-		// Constructs pane
-
-        Image image5 = new Image(new File(
-                "lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
-        root.setBackground(new Background(new BackgroundImage(image5, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-      
+		// Constructs background
+		Image image5 = new Image(new File(
+				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
+		root.setBackground(new Background(new BackgroundImage(image5,
+				BackgroundRepeat.REPEAT,
+				BackgroundRepeat.REPEAT,
+				BackgroundPosition.DEFAULT,
+				new BackgroundSize(1.0, 1.0, true, true, false, false))));
 
 		// Makes CSS and sidepane possible
 		scene.getStylesheets().add(getClass().getResource("Reversi.css").toExternalForm());
@@ -259,280 +251,333 @@ public class View extends Application {
 	// Stage setup
 	@Override
 	public void start(Stage primaryStage) throws MalformedURLException {
-        Image image = new Image(new File(
-                "lib/billeder/reversi-game.jpg").toURI().toURL().toString());
-        ImageView imageView = new ImageView(image);
-        pane.getChildren().add(imageView);
+		Image image = new Image(new File(
+				"lib/billeder/reversi-game.jpg").toURI().toURL().toString());
+		ImageView imageView = new ImageView(image);
+		pane.getChildren().add(imageView);
 
-        // Create a new stage
-        menuStage.setTitle("Menu");
+		// Create a new stage
+		menuStage.setTitle("Menu");
 
-        // Set the scene for the stage
-        menuStage.setScene(menuScene);
-        menuStage.setResizable(false);
-        menuStage.show();
+		// Set the scene for the stage
+		menuStage.setScene(menuScene);
+		menuStage.setResizable(false);
+		menuStage.show();
 
-        // Button to the scene
-        ScaleTransition startButten = new ScaleTransition(Duration.millis(300), startGame);
-        startButten.setFromX(1);
-        startButten.setFromY(1);
-        startButten.setToX(1.1);
-        startButten.setToY(1.1);
+		// Button to the scene
+		ScaleTransition startButten = new ScaleTransition(Duration.millis(300), startGame);
+		startButten.setFromX(1);
+		startButten.setFromY(1);
+		startButten.setToX(1.1);
+		startButten.setToY(1.1);
 
-        ScaleTransition startShrink = new ScaleTransition(Duration.millis(200), startGame);
-        startShrink.setFromX(1.1);
-        startShrink.setFromY(1.1);
-        startShrink.setToX(1);
-        startShrink.setToY(1);
+		ScaleTransition startShrink = new ScaleTransition(Duration.millis(200), startGame);
+		startShrink.setFromX(1.1);
+		startShrink.setFromY(1.1);
+		startShrink.setToX(1);
+		startShrink.setToY(1);
 
-        startGame.setOnMouseEntered(e -> startButten.playFromStart());
-        startGame.setOnMouseExited(e -> startShrink.playFromStart());
+		startGame.setOnMouseEntered(e -> startButten.playFromStart());
+		startGame.setOnMouseExited(e -> startShrink.playFromStart());
 
-        startGame.setPrefSize(300, 60);
-        startGame.setText("Start Game");
-        pane.getChildren().add(startGame);
-        startGame.setLayoutX(pane.getWidth() / 2 - 150);
-        startGame.setLayoutY(pane.getHeight() / 2);
-        startGame.setStyle("-fx-background-color: #33CC66;"
-                + "-fx-border-color: black;"
-                + "-fx-border-radius: 50;"
-                + " -fx-background-radius: 50;"
-                + " -fx-text-fill : black;"
-                + " -fx-border-width: 2;"
-                + " -fx-font-size : 30px");
+		startGame.setPrefSize(300, 60);
+		startGame.setText("Start Game");
+		pane.getChildren().add(startGame);
+		startGame.setLayoutX(pane.getWidth() / 2 - 150);
+		startGame.setLayoutY(pane.getHeight() / 2);
+		startGame.setStyle("-fx-background-color: #33CC66;"
+				+ "-fx-border-color: black;"
+				+ "-fx-border-radius: 50;"
+				+ " -fx-background-radius: 50;"
+				+ " -fx-text-fill : black;"
+				+ " -fx-border-width: 2;"
+				+ " -fx-font-size : 30px");
 
-				startGame.setOnAction(new EventHandler<ActionEvent>() {
+		startGame.setOnAction(new EventHandler<ActionEvent>() {
 
-					@Override
-					public void handle(ActionEvent event) {
-						primaryStage.show();
-						menuStage.close();
-					}
-				});
-               
-                backToMenu.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				primaryStage.show();
+				Model.gameCounter--;
+				Model.restartGame(buttons2D);
+				menuStage.close();
+			}
+		});
 
-                    @Override
-                    public void handle(ActionEvent event) {
-                        menuStage.show();
-                        primaryStage.close();
-                    }
-                });
+		backToMenu.setOnAction(new EventHandler<ActionEvent>() {
 
-        ScaleTransition rulesButten = new ScaleTransition(Duration.millis(300), rules);
-        rulesButten.setFromX(1);
-        rulesButten.setFromY(1);
-        rulesButten.setToX(1.1);
-        rulesButten.setToY(1.1);
+			@Override
+			public void handle(ActionEvent event) {
+				menuStage.show();
+				primaryStage.close();
+			}
+		});
 
-        ScaleTransition rulesShrink = new ScaleTransition(Duration.millis(200), rules);
-        rulesShrink.setFromX(1.1);
-        rulesShrink.setFromY(1.1);
-        rulesShrink.setToX(1);
-        rulesShrink.setToY(1);
+		ScaleTransition rulesButten = new ScaleTransition(Duration.millis(300), rules);
+		rulesButten.setFromX(1);
+		rulesButten.setFromY(1);
+		rulesButten.setToX(1.1);
+		rulesButten.setToY(1.1);
 
-        rules.setOnMouseEntered(e -> rulesButten.playFromStart());
-        rules.setOnMouseExited(e -> rulesShrink.playFromStart());
+		ScaleTransition rulesShrink = new ScaleTransition(Duration.millis(200), rules);
+		rulesShrink.setFromX(1.1);
+		rulesShrink.setFromY(1.1);
+		rulesShrink.setToX(1);
+		rulesShrink.setToY(1);
 
-        rules.setPrefSize(150, 25);
-        rules.setText("Game rules");
-        pane.getChildren().add(rules);
-        rules.setLayoutX(pane.getWidth() / 2 - 75);
-        rules.setLayoutY(pane.getHeight() / 2 + 75);
-        rules.setStyle("-fx-background-color: #33CC66;"
-                + "-fx-border-color: black;"
-                + "-fx-border-radius: 50;"
-                + " -fx-background-radius: 50;"
-                + " -fx-text-fill : black;"
-                + " -fx-border-width: 2;"
-                + " -fx-font-size : 20px");
+		rules.setOnMouseEntered(e -> rulesButten.playFromStart());
+		rules.setOnMouseExited(e -> rulesShrink.playFromStart());
 
-        ScaleTransition exitButten = new ScaleTransition(Duration.millis(300), exit);
-        exitButten.setFromX(1);
-        exitButten.setFromY(1);
-        exitButten.setToX(1.1);
-        exitButten.setToY(1.1);
+		rules.setPrefSize(150, 25);
+		rules.setText("Game rules");
+		pane.getChildren().add(rules);
+		rules.setLayoutX(pane.getWidth() / 2 - 75);
+		rules.setLayoutY(pane.getHeight() / 2 + 75);
+		rules.setStyle("-fx-background-color: #33CC66;"
+				+ "-fx-border-color: black;"
+				+ "-fx-border-radius: 50;"
+				+ " -fx-background-radius: 50;"
+				+ " -fx-text-fill : black;"
+				+ " -fx-border-width: 2;"
+				+ " -fx-font-size : 20px");
 
-        ScaleTransition exitShrink = new ScaleTransition(Duration.millis(200), exit);
-        exitShrink.setFromX(1.1);
-        exitShrink.setFromY(1.1);
-        exitShrink.setToX(1);
-        exitShrink.setToY(1);
+		ScaleTransition exitButten = new ScaleTransition(Duration.millis(300), exit);
+		exitButten.setFromX(1);
+		exitButten.setFromY(1);
+		exitButten.setToX(1.1);
+		exitButten.setToY(1.1);
 
-        exit.setOnMouseEntered(e -> exitButten.playFromStart());
-        exit.setOnMouseExited(e -> exitShrink.playFromStart());
+		ScaleTransition exitShrink = new ScaleTransition(Duration.millis(200), exit);
+		exitShrink.setFromX(1.1);
+		exitShrink.setFromY(1.1);
+		exitShrink.setToX(1);
+		exitShrink.setToY(1);
 
-        exit.setPrefSize(150, 25);
-        exit.setText("Exit");
-        pane.getChildren().add(exit);
-        exit.setLayoutX(pane.getWidth() / 2 - 75);
-        exit.setLayoutY(pane.getHeight() / 2 + 130);
-        exit.setStyle("-fx-background-color: #33CC66;"
-                + " -fx-background-radius: 50;"
-                + " -fx-border-color: Black;"
-                + " -fx-border-radius: 50;"
-                + " -fx-text-fill : black;"
-                + " -fx-border-width: 2;"
-                + " -fx-font-size : 20px");
+		exit.setOnMouseEntered(e -> exitButten.playFromStart());
+		exit.setOnMouseExited(e -> exitShrink.playFromStart());
 
-        Gamerules.setTitle("Game rules");
+		exit.setPrefSize(150, 25);
+		exit.setText("Exit");
+		pane.getChildren().add(exit);
+		exit.setLayoutX(pane.getWidth() / 2 - 75);
+		exit.setLayoutY(pane.getHeight() / 2 + 130);
+		exit.setStyle("-fx-background-color: #33CC66;"
+				+ " -fx-background-radius: 50;"
+				+ " -fx-border-color: Black;"
+				+ " -fx-border-radius: 50;"
+				+ " -fx-text-fill : black;"
+				+ " -fx-border-width: 2;"
+				+ " -fx-font-size : 20px");
 
-        Pane gamerulesPane = new Pane();
-        Image image2 = new Image(new File(
-                "lib/billeder/Reversi-start.png").toURI().toURL().toString());
-        ImageView imageView2 = new ImageView(image2);
-        gamerulesPane.getChildren().add(imageView2);
-        imageView2.setFitWidth(250);
-        imageView2.setFitHeight(250);
-        imageView2.setLayoutX(gamerulesPane.getWidth() + 100);
-        imageView2.setLayoutY(gamerulesPane.getHeight() + 225);
+		Gamerules.setTitle("Game rules");
 
-        Image image3 = new Image(new File(
-                "lib/billeder/Reversi-startv2.png").toURI().toURL().toString());
-        ImageView imageView3 = new ImageView(image3);
-        gamerulesPane.getChildren().add(imageView3);
-        imageView3.setFitWidth(250);
-        imageView3.setFitHeight(250);
-        imageView3.setLayoutX(gamerulesPane.getWidth() + 450);
-        imageView3.setLayoutY(gamerulesPane.getHeight() + 225);
+		Pane gamerulesPane = new Pane();
+		Image image2 = new Image(new File(
+				"lib/billeder/Reversi-start.png").toURI().toURL().toString());
+		ImageView imageView2 = new ImageView(image2);
+		gamerulesPane.getChildren().add(imageView2);
+        InnerShadow innerShadow = new InnerShadow();
+            innerShadow.setColor(Color.BLACK);
+            imageView2.setEffect(innerShadow);
+		imageView2.setFitWidth(250);
+		imageView2.setFitHeight(250);
+		imageView2.setLayoutX(gamerulesPane.getWidth() + 100);
+		imageView2.setLayoutY(gamerulesPane.getHeight() + 225);
 
-        BacktoMenu.setPrefSize(150, 25);
-        BacktoMenu.setText("Back to menu");
-        gamerulesPane.getChildren().add(BacktoMenu);
-        BacktoMenu.setLayoutX(gamerulesPane.getWidth() / 2 + 650);
-        BacktoMenu.setLayoutY(gamerulesPane.getHeight() / 2 + 550);
-        BacktoMenu.setStyle("-fx-background-color: #8B4513;"
-                + "-fx-border-color: black;"
-                + "-fx-border-radius: 50;"
-                + " -fx-background-radius: 50;"
-                + " -fx-text-fill : black;"
-                + " -fx-border-width: 2;"
-                + " -fx-font-size : 20px");
+		Image image3 = new Image(new File(
+				"lib/billeder/Reversi-startv2.png").toURI().toURL().toString());
+		ImageView imageView3 = new ImageView(image3);
+        innerShadow.setColor(Color.BLACK);
+            innerShadow.setRadius(5);
+            innerShadow.setChoke(0.7);
+            imageView3.setEffect(innerShadow);
+		gamerulesPane.getChildren().add(imageView3);
+		imageView3.setFitWidth(250);
+		imageView3.setFitHeight(250);
+		imageView3.setLayoutX(gamerulesPane.getWidth() + 450);
+		imageView3.setLayoutY(gamerulesPane.getHeight() + 225);
 
-        Next.setPrefSize(150, 25);
-        Next.setText("Next");
-        gamerulesPane.getChildren().add(Next);
-        Next.setLayoutX(gamerulesPane.getWidth() / 2 + 475);
-        Next.setLayoutY(gamerulesPane.getHeight() / 2 + 550);
-        Next.setStyle("-fx-background-color: #8B4513;"
-                + "-fx-border-color: black;"
-                + "-fx-border-radius: 50;"
-                + " -fx-background-radius: 50;"
-                + " -fx-text-fill : black;"
-                + " -fx-border-width: 2;"
-                + " -fx-font-size : 20px");
+		BacktoMenu.setPrefSize(150, 25);
+		BacktoMenu.setText("Back to menu");
+		gamerulesPane.getChildren().add(BacktoMenu);
+		BacktoMenu.setLayoutX(gamerulesPane.getWidth() / 2 + 650);
+		BacktoMenu.setLayoutY(gamerulesPane.getHeight() / 2 + 550);
+		BacktoMenu.setStyle("-fx-background-color: #8B4513;"
+				+ "-fx-border-color: black;"
+				+ "-fx-border-radius: 50;"
+				+ " -fx-background-radius: 50;"
+				+ " -fx-text-fill : black;"
+				+ " -fx-border-width: 2;"
+				+ " -fx-font-size : 20px");
 
-        Label label = new Label("\nEach reversi piece has a black side and a white side."
-                + "\nOn your turn, you place one piece on the board with your color. "
-                + "\nYou must place the piece so that an opponent's piece, or a row of opponent's pieces, is flanked by your pieces."
-                + "\nAll of the opponent's pieces between your pieces are then turned over to become your color. "
-                + "\n\nThe object of the game is to own more pieces than your opponent when the game is over."
-                + "\nThe game is over when neither player has a move. Usually, this means the board is full. ");
+		Next.setPrefSize(150, 25);
+		Next.setText("Next");
+		gamerulesPane.getChildren().add(Next);
+		Next.setLayoutX(gamerulesPane.getWidth() / 2 + 475);
+		Next.setLayoutY(gamerulesPane.getHeight() / 2 + 550);
+		Next.setStyle("-fx-background-color: #8B4513;"
+				+ "-fx-border-color: black;"
+				+ "-fx-border-radius: 50;"
+				+ " -fx-background-radius: 50;"
+				+ " -fx-text-fill : black;"
+				+ " -fx-border-width: 2;"
+				+ " -fx-font-size : 20px");
+
+		Label label = new Label("\nEach reversi piece has a black side and a white side."
+				+ "\nOn your turn, you place one piece on the board with your color. "
+				+ "\n\nYou must place the piece so that an opponent's piece, or a row of opponent's pieces, is flanked by your pieces."
+				+ "\nAll of the opponent's pieces between your pieces are then turned over to become your color. "
+				+ "\n\nThe object of the game is to own more pieces than your opponent when the game is over."
+				+ "\nThe game is over when neither player has a move. Usually, this means the board is full. ");
+        label.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        label.setTextFill(Color.web("White"));
         gamerulesPane.getChildren().add(label);
-        label.setLayoutX(gamerulesPane.getWidth() + 10);
-        Gamerules.setResizable(false);
+		label.setLayoutX(gamerulesPane.getWidth() + 10);
+		Gamerules.setResizable(false);
 
-        Scene gamerulesScene = new Scene(gamerulesPane, 800, 600);
-        Gamerules.setScene(gamerulesScene);
-        gamerulesPane.setStyle("-fx-background-color: #33CC66;"
-                + " -fx-font-size : 17px;");
+		Scene gamerulesScene = new Scene(gamerulesPane, 800, 600);
+		Gamerules.setScene(gamerulesScene);
+		Image image6 = new Image(new File(
+				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
+		gamerulesPane.setBackground(new Background(new BackgroundImage(image6,
+				BackgroundRepeat.REPEAT,
+				BackgroundRepeat.REPEAT,
+				BackgroundPosition.DEFAULT,
+				new BackgroundSize(1.0, 1.0, true, true, false, false))));
 
-        Gamerules2.setTitle("Game rules");
-        Pane gamerulesPane2 = new Pane();
+		Gamerules2.setTitle("Game rules");
+		Pane gamerulesPane2 = new Pane();
 
-        Image image4 = new Image(new File(
-                "lib/billeder/Reversi-arrows.png").toURI().toURL().toString());
-        ImageView imageView4 = new ImageView(image4);
-        gamerulesPane2.getChildren().add(imageView4);
-        imageView4.setFitWidth(550);
-        imageView4.setFitHeight(325);
-        imageView4.setLayoutX(gamerulesPane2.getWidth() + 200);
-        imageView4.setLayoutY(gamerulesPane2.getHeight() + 225);
+		Image image4 = new Image(new File(
+				"lib/billeder/Reversi-arrows.png").toURI().toURL().toString());
+		ImageView imageView4 = new ImageView(image4);
+        innerShadow.setColor(Color.BLACK);
+            innerShadow.setRadius(5);
+            innerShadow.setChoke(0.7);
+            imageView4.setEffect(innerShadow);
+		gamerulesPane2.getChildren().add(imageView4);
+		imageView4.setFitWidth(550);
+		imageView4.setFitHeight(325);
+		imageView4.setLayoutX(gamerulesPane2.getWidth() + 125);
+		imageView4.setLayoutY(gamerulesPane2.getHeight() + 180);
 
-        back.setPrefSize(150, 25);
-        back.setText("Back");
-        gamerulesPane2.getChildren().add(back);
-        back.setLayoutX(gamerulesPane2.getWidth());
-        back.setLayoutY(gamerulesPane2.getHeight() + 550);
-        back.setStyle("-fx-background-color: #8B4513;"
-                + "-fx-border-color: black;"
-                + "-fx-border-radius: 50;"
-                + " -fx-background-radius: 50;"
-                + " -fx-text-fill : black;"
-                + " -fx-border-width: 2;"
-                + " -fx-font-size : 20px");
+		back.setPrefSize(150, 25);
+		back.setText("Back");
+		gamerulesPane2.getChildren().add(back);
+		back.setLayoutX(gamerulesPane2.getWidth());
+		back.setLayoutY(gamerulesPane2.getHeight() + 550);
+		back.setStyle("-fx-background-color: #8B4513;"
+				+ "-fx-border-color: black;"
+				+ "-fx-border-radius: 50;"
+				+ " -fx-background-radius: 50;"
+				+ " -fx-text-fill : black;"
+				+ " -fx-border-width: 2;"
+				+ " -fx-font-size : 20px");
 
-        BacktoMenu2.setPrefSize(150, 25);
-        BacktoMenu2.setText("Back to menu");
-        gamerulesPane2.getChildren().add(BacktoMenu2);
-        BacktoMenu2.setLayoutX(gamerulesPane2.getWidth() / 2 + 650);
-        BacktoMenu2.setLayoutY(gamerulesPane2.getHeight() / 2 + 550);
-        BacktoMenu2.setStyle("-fx-background-color: #8B4513;"
-                + "-fx-border-color: black;"
-                + "-fx-border-radius: 50;"
-                + " -fx-background-radius: 50;"
-                + " -fx-text-fill : black;"
-                + " -fx-border-width: 2;"
-                + " -fx-font-size : 20px");
+		BacktoMenu2.setPrefSize(150, 25);
+		BacktoMenu2.setText("Back to menu");
+		gamerulesPane2.getChildren().add(BacktoMenu2);
+		BacktoMenu2.setLayoutX(gamerulesPane2.getWidth() / 2 + 650);
+		BacktoMenu2.setLayoutY(gamerulesPane2.getHeight() / 2 + 550);
+		BacktoMenu2.setStyle("-fx-background-color: #8B4513;"
+				+ "-fx-border-color: black;"
+				+ "-fx-border-radius: 50;"
+				+ " -fx-background-radius: 50;"
+				+ " -fx-text-fill : black;"
+				+ " -fx-border-width: 2;"
+				+ " -fx-font-size : 20px");
 
-        Label label2 = new Label(
-                "\nThe game is started in the position shown below on a reversi board consisting of 64 squares in an 8x8 grid. "
-                        + "\n\nThe gray rings on the board are the places where it's legal to place your next piece."
-                        + "\n\nOn the right side of the board you can see the current score and who is winnig."
-                        + "\n\nYou can press the 'Pass' button on the right side if you dont have an option to place your piece \nand the turn goes to the opponent.");
-        gamerulesPane2.getChildren().add(label2);
-        label2.setLayoutX(gamerulesPane2.getWidth() + 10);
+		Label label2 = new Label(
+				"\nThe game starts in the position as shown below and "
+						+ "\nthe gray rings on the board are the places where it's legal to place your next piece."
+						+ "\n\nOn the right side of the board you can see the current score and who is currently winning."
+                        + "\nHere you can also see the timer that starts when it's your turn. If the time runs out the opponent wins."
+						+ "\n\nIf you dont have the option to place your piece you can press the 'Pass' button \nand the turn goes to the opponent.");
+                label2.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+                label2.setTextFill(Color.web("White"));
+                gamerulesPane2.getChildren().add(label2);
+		label2.setLayoutX(gamerulesPane2.getWidth() + 10);
 
-        Scene gamerulesScene2 = new Scene(gamerulesPane2, 800, 600);
-        Gamerules2.setScene(gamerulesScene2);
-        gamerulesPane2.setStyle("-fx-background-color: #33CC66;"
-                + " -fx-font-size : 17px;");
+		Scene gamerulesScene2 = new Scene(gamerulesPane2, 800, 600);
+		Gamerules2.setScene(gamerulesScene2);
+		gamerulesPane2.setBackground(new Background(new BackgroundImage(image6,
+				BackgroundRepeat.REPEAT,
+				BackgroundRepeat.REPEAT,
+				BackgroundPosition.DEFAULT,
+				new BackgroundSize(1.0, 1.0, true, true, false, false))));
 
-        // SoundFX: Intro-music when open game
-        media = new Media(new File("Intro-Reversi.wav").toURI().toString());
-        intro = new MediaPlayer(media);
-        intro.setVolume(0.1);
-        intro.play();
-
-
-
+		// SoundFX: Intro-music when open game
+		media = new Media(new File("Intro-Reversi.wav").toURI().toString());
+		intro = new MediaPlayer(media);
+		intro.setVolume(0.1);
+		intro.play();
 
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Reversi");
 		primaryStage.setResizable(false);
-		
+
+		// Time counter speed-settings:
+		double countSpeedRate = 1; // 1 = normal, 0.05 = fast, 2 = slow
 
 		// Create a TimeLine for white
-		// Settings:
-		double countSpeedRate = 1; // 1 = normal, ? < 1 = faster, ? > 1 = slower
-
 		whiteTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
 				event -> {
+
+					// Start value for count down
+					if (Model.whiteMinut == 5) {
+						Model.whiteMinut = 4;
+					}
+
 					// Displays and updates time
 					timeDisplayWhite.textProperty()
-							.bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer++));
-					// Every 60 second, store 1 minute
-					if (Model.whiteTimer % 60 == 0) {
-						Model.whiteMinut++;
-						System.out.println("sort minut: " + Model.whiteMinut);
-						Model.whiteTimer = 0; // Reset seconds to 00
+							.bind(Bindings.format(" Time: %02d:%02d ", Model.whiteMinut, Model.whiteTimer--));
+
+					// Count down of white timer
+					if (Model.whiteTimer == 0) {
+
+						// Winner decision: white time runs out -> black wins
+						if (Model.whiteMinut == 0 && Model.whiteTimer == 0) {
+							Model.winner = "BLACK";
+							Model.winner(new Stage());
+							whiteTimeLine.stop();
+						}
+
+						Model.whiteMinut--;
+						System.out.println("hvid minut: " + Model.whiteMinut);
+						Model.whiteTimer = 59;
 					}
+
 				}));
 		whiteTimeLine.setCycleCount(Timeline.INDEFINITE);
 
-		// Create a TimeLine for white
+		// Create a TimeLine for black
 		blackTimeLine = new Timeline(new KeyFrame(Duration.seconds(countSpeedRate),
 				event -> {
 
+					// Start value for count down
+					if (Model.blackMinut == 5) {
+						Model.blackMinut = 4;
+					}
+
 					// Displays and updates time
 					timeDisplayBlack.textProperty()
-							.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer++));
-					// Every 60 second, store 1 minute
-					if (Model.blackTimer % 60 == 0) {
-						Model.blackMinut++;
+							.bind(Bindings.format(" Time: %02d:%02d ", Model.blackMinut, Model.blackTimer--));
+
+					// Count down of black timer
+					if (Model.blackTimer == 0) {
+
+						// Winner decision: black time runs out -> white wins
+						if (Model.blackMinut == 0 && Model.blackTimer == 0) {
+							Model.winner = "WHITE";
+							Model.winner(new Stage());
+							blackTimeLine.stop();
+						}
+
+						Model.blackMinut--;
 						System.out.println("sort minut: " + Model.blackMinut);
-						Model.blackTimer = 0; // Reset seconds to 00
+						Model.blackTimer = 59;
 					}
+
 				}));
 		blackTimeLine.setCycleCount(Timeline.INDEFINITE);
 
