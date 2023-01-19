@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 public class Controller {
 
     public Controller(Stage primaryStage) {
+        View.media = new Media(new File("Musik.mp3").toURI().toString());
+        View.backgroundMusik = new MediaPlayer(View.media);
+
         // On-click action for mute: Mute all sound FX
         View.mute.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -49,7 +52,7 @@ public class Controller {
                             View.blackScore.setText("Black score " + Model.numberOfBlack);
                             Model.focusPlayer();
 
-                            if(!(Model.winner.equals(""))){
+                            if (!(Model.winner.equals(""))) {
                                 View.whiteTimeLine.stop();
                                 View.blackTimeLine.stop();
                             }
@@ -82,8 +85,15 @@ public class Controller {
                             View.media = new Media(new File("Reversi-game-sound.wav").toURI().toString());
                             View.legalMoveSound = new MediaPlayer(View.media);
                             View.legalMoveSound.setVolume(0.1);
+
+                            View.backgroundMusik.setVolume(0.45);
+
                             if (Model.soundOn) {
                                 View.legalMoveSound.play();
+                                if (View.backgroundMusik.getStatus() != MediaPlayer.Status.PLAYING) {
+                                    View.backgroundMusik.setCycleCount(MediaPlayer.INDEFINITE);
+                                    View.backgroundMusik.play();
+                                }
                             }
 
                         } else {

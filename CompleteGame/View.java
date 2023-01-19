@@ -15,6 +15,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -66,6 +67,7 @@ public class View extends Application {
 	static MediaPlayer intro = new MediaPlayer(media);
 	static MediaPlayer legalMoveSound = new MediaPlayer(media);
 	static MediaPlayer IllegalMoveSound = new MediaPlayer(media);
+	static MediaPlayer backgroundMusik = new MediaPlayer(media);
 
 	static Stage Gamerules = new Stage();
 	static Stage Gamerules2 = new Stage();
@@ -309,6 +311,7 @@ public class View extends Application {
 			public void handle(ActionEvent event) {
 				menuStage.show();
 				primaryStage.close();
+				backgroundMusik.stop();
 			}
 		});
 
@@ -375,6 +378,9 @@ public class View extends Application {
 				"lib/billeder/Reversi-start.png").toURI().toURL().toString());
 		ImageView imageView2 = new ImageView(image2);
 		gamerulesPane.getChildren().add(imageView2);
+        InnerShadow innerShadow = new InnerShadow();
+            innerShadow.setColor(Color.BLACK);
+            imageView2.setEffect(innerShadow);
 		imageView2.setFitWidth(250);
 		imageView2.setFitHeight(250);
 		imageView2.setLayoutX(gamerulesPane.getWidth() + 100);
@@ -383,6 +389,10 @@ public class View extends Application {
 		Image image3 = new Image(new File(
 				"lib/billeder/Reversi-startv2.png").toURI().toURL().toString());
 		ImageView imageView3 = new ImageView(image3);
+        innerShadow.setColor(Color.BLACK);
+            innerShadow.setRadius(5);
+            innerShadow.setChoke(0.7);
+            imageView3.setEffect(innerShadow);
 		gamerulesPane.getChildren().add(imageView3);
 		imageView3.setFitWidth(250);
 		imageView3.setFitHeight(250);
@@ -417,18 +427,25 @@ public class View extends Application {
 
 		Label label = new Label("\nEach reversi piece has a black side and a white side."
 				+ "\nOn your turn, you place one piece on the board with your color. "
-				+ "\nYou must place the piece so that an opponent's piece, or a row of opponent's pieces, is flanked by your pieces."
+				+ "\n\nYou must place the piece so that an opponent's piece, or a row of opponent's pieces, is flanked by your pieces."
 				+ "\nAll of the opponent's pieces between your pieces are then turned over to become your color. "
 				+ "\n\nThe object of the game is to own more pieces than your opponent when the game is over."
 				+ "\nThe game is over when neither player has a move. Usually, this means the board is full. ");
-		gamerulesPane.getChildren().add(label);
+        label.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        label.setTextFill(Color.web("White"));
+        gamerulesPane.getChildren().add(label);
 		label.setLayoutX(gamerulesPane.getWidth() + 10);
 		Gamerules.setResizable(false);
 
 		Scene gamerulesScene = new Scene(gamerulesPane, 800, 600);
 		Gamerules.setScene(gamerulesScene);
-		gamerulesPane.setStyle("-fx-background-color: #33CC66;"
-				+ " -fx-font-size : 17px;");
+		Image image6 = new Image(new File(
+				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
+		gamerulesPane.setBackground(new Background(new BackgroundImage(image6,
+				BackgroundRepeat.REPEAT,
+				BackgroundRepeat.REPEAT,
+				BackgroundPosition.DEFAULT,
+				new BackgroundSize(1.0, 1.0, true, true, false, false))));
 
 		Gamerules2.setTitle("Game rules");
 		Pane gamerulesPane2 = new Pane();
@@ -436,11 +453,15 @@ public class View extends Application {
 		Image image4 = new Image(new File(
 				"lib/billeder/Reversi-arrows.png").toURI().toURL().toString());
 		ImageView imageView4 = new ImageView(image4);
+        innerShadow.setColor(Color.BLACK);
+            innerShadow.setRadius(5);
+            innerShadow.setChoke(0.7);
+            imageView4.setEffect(innerShadow);
 		gamerulesPane2.getChildren().add(imageView4);
 		imageView4.setFitWidth(550);
 		imageView4.setFitHeight(325);
-		imageView4.setLayoutX(gamerulesPane2.getWidth() + 200);
-		imageView4.setLayoutY(gamerulesPane2.getHeight() + 225);
+		imageView4.setLayoutX(gamerulesPane2.getWidth() + 125);
+		imageView4.setLayoutY(gamerulesPane2.getHeight() + 180);
 
 		back.setPrefSize(150, 25);
 		back.setText("Back");
@@ -469,17 +490,23 @@ public class View extends Application {
 				+ " -fx-font-size : 20px");
 
 		Label label2 = new Label(
-				"\nThe game is started in the position shown below on a reversi board consisting of 64 squares in an 8x8 grid. "
-						+ "\n\nThe gray rings on the board are the places where it's legal to place your next piece."
-						+ "\n\nOn the right side of the board you can see the current score and who is winnig."
-						+ "\n\nYou can press the 'Pass' button on the right side if you dont have an option to place your piece \nand the turn goes to the opponent.");
-		gamerulesPane2.getChildren().add(label2);
+				"\nThe game starts in the position as shown below and "
+						+ "\nthe gray rings on the board are the places where it's legal to place your next piece."
+						+ "\n\nOn the right side of the board you can see the current score and who is currently winning."
+                        + "\nHere you can also see the timer that starts when it's your turn. If the time runs out the opponent wins."
+						+ "\n\nIf you dont have the option to place your piece you can press the 'Pass' button \nand the turn goes to the opponent.");
+                label2.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+                label2.setTextFill(Color.web("White"));
+                gamerulesPane2.getChildren().add(label2);
 		label2.setLayoutX(gamerulesPane2.getWidth() + 10);
 
 		Scene gamerulesScene2 = new Scene(gamerulesPane2, 800, 600);
 		Gamerules2.setScene(gamerulesScene2);
-		gamerulesPane2.setStyle("-fx-background-color: #33CC66;"
-				+ " -fx-font-size : 17px;");
+		gamerulesPane2.setBackground(new Background(new BackgroundImage(image6,
+				BackgroundRepeat.REPEAT,
+				BackgroundRepeat.REPEAT,
+				BackgroundPosition.DEFAULT,
+				new BackgroundSize(1.0, 1.0, true, true, false, false))));
 
 		// SoundFX: Intro-music when open game
 		media = new Media(new File("Intro-Reversi.wav").toURI().toString());

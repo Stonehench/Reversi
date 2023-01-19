@@ -469,6 +469,7 @@ public class Model {
         View.timeDisplayBlack.textProperty().unbind();
         View.timeDisplayWhite.setText(" Time: 05:00 ");
         View.timeDisplayBlack.setText(" Time: 05:00 ");
+        View.backgroundMusik.stop();
 
         // Update GUI to reflect reset game state
         View.blackScore.setText("Black Score: 2");

@@ -17,6 +17,8 @@ public class Winner extends Application{
     @Override
     public void start(Stage winStage) {
         
+        View.backgroundMusik.stop();
+        
         winStage.initModality(Modality.APPLICATION_MODAL);
         winStage.setTitle("Game over");
         winStage.setMinWidth(400);
