@@ -1,4 +1,4 @@
-package Demonstration;
+package JanuarProject;
 
 import java.io.File;
 
@@ -90,24 +90,17 @@ public class Winner extends Application{
 		winStage.show();
 
 		Image image5 = new Image(new File(
-				"Adlon3_Amerikansk-Valdnød.jpg").toURI().toString());
+				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toString());
 		layout.setBackground(new Background(new BackgroundImage(image5,
 				BackgroundRepeat.REPEAT,
 				BackgroundRepeat.REPEAT,
 				BackgroundPosition.DEFAULT,
 				new BackgroundSize(1.0, 1.0, true, true, false, false))));
 
-		View.media = new Media(new File("victory.mp3").toURI().toString());
-		View.backgroundMusik = new MediaPlayer(View.media);
-		View.backgroundMusik.setVolume(0.1);
-		View.backgroundMusik.play();
-		View.backgroundMusik.setOnEndOfMedia(new Runnable() {
-			@Override
-			public void run() {
-				View.backgroundMusik.stop();
-			}
-		});
-
+		View.backgroundMusik.stop();
+		Media victory = new Media(new File("victory.wav").toURI().toString());
+		MediaPlayer victoryPlayer= new MediaPlayer(victory);
+		victoryPlayer.setVolume(0.1);
+		victoryPlayer.play();
 	}
-
 }
