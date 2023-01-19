@@ -24,6 +24,7 @@ public class Controller {
                 if (Model.clickedMute % 2 != 0) {
                     Model.soundOn = false;
                     View.mute.setText("SoundFX: off");
+                    View.backgroundMusik.stop();
                 } else {
                     Model.soundOn = true;
                     View.mute.setText("SoundFX: on");
@@ -86,7 +87,7 @@ public class Controller {
                             View.legalMoveSound = new MediaPlayer(View.media);
                             View.legalMoveSound.setVolume(0.1);
 
-                            View.backgroundMusik.setVolume(0.45);
+                            View.backgroundMusik.setVolume(1);
 
                             if (Model.soundOn) {
                                 View.legalMoveSound.play();
