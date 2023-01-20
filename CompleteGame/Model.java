@@ -1,4 +1,4 @@
-package JanuarProject;
+package completeReversiGame;
 
 import javafx.animation.FillTransition;
 import javafx.animation.RotateTransition;
@@ -386,7 +386,7 @@ public class Model {
             }
             clickCount--;
         } else {
-            View.pass.setDisable(true);
+            View.pass.setDisable(true); //Ændring
         }
         if (numberOfWhite == 0) {
             winner = "BLACK";
@@ -461,6 +461,8 @@ public class Model {
         blackMinut = 5; // new
         whiteTimer = 59; // new
         whiteMinut = 5; // new
+        
+        winner = "";
 
         // Reset time display
         View.whiteTimeLine.stop();

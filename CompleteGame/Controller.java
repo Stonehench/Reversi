@@ -1,4 +1,4 @@
-package JanuarProject;
+package completeReversiGame;
 
 import java.io.File;
 

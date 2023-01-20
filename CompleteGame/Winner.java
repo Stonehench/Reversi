@@ -1,4 +1,4 @@
-package JanuarProject;
+package completeReversiGame;
 
 import java.io.File;
 
@@ -30,6 +30,9 @@ public class Winner extends Application{
 
 	@Override
 	public void start(Stage winStage) {
+		
+		//Background music stops
+		View.backgroundMusik.stop();
 
 		winStage.initModality(Modality.APPLICATION_MODAL);
 		winStage.setTitle("Game over");
@@ -90,17 +93,20 @@ public class Winner extends Application{
 		winStage.show();
 
 		Image image5 = new Image(new File(
-				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toString());
+				"Adlon3_Amerikansk-Valdnød.jpg").toURI().toString());
 		layout.setBackground(new Background(new BackgroundImage(image5,
 				BackgroundRepeat.REPEAT,
 				BackgroundRepeat.REPEAT,
 				BackgroundPosition.DEFAULT,
 				new BackgroundSize(1.0, 1.0, true, true, false, false))));
 
-		View.backgroundMusik.stop();
-		Media victory = new Media(new File("victory.wav").toURI().toString());
+		Media victory = new Media(new File("victory.mp3").toURI().toString());
 		MediaPlayer victoryPlayer= new MediaPlayer(victory);
 		victoryPlayer.setVolume(0.1);
 		victoryPlayer.play();
+
+		
+
 	}
+
 }

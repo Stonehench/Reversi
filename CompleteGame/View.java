@@ -1,4 +1,4 @@
-package JanuarProject;
+package completeReversiGame;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -237,7 +237,7 @@ public class View extends Application {
 
 		// Constructs background
 		Image image5 = new Image(new File(
-				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
+				"Adlon3_Amerikansk-Valdnød.jpg").toURI().toString());
 		root.setBackground(new Background(new BackgroundImage(image5,
 				BackgroundRepeat.REPEAT,
 				BackgroundRepeat.REPEAT,
@@ -253,7 +253,7 @@ public class View extends Application {
 	@Override
 	public void start(Stage primaryStage) throws MalformedURLException {
 		Image image = new Image(new File(
-				"lib/billeder/reversi-game.jpg").toURI().toURL().toString());
+				"reversi-game.jpg").toURI().toString());
 		ImageView imageView = new ImageView(image);
 		pane.getChildren().add(imageView);
 
@@ -299,7 +299,9 @@ public class View extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				primaryStage.show();
-				Model.gameCounter--;
+				Model.gameCounter = 0;
+				Model.blackWinCounter2 = 0;
+				Model.whiteWinCounter2 = 0;
 				Model.restartGame(buttons2D);
 				menuStage.close();
 			}
@@ -375,7 +377,7 @@ public class View extends Application {
 
 		Pane gamerulesPane = new Pane();
 		Image image2 = new Image(new File(
-				"lib/billeder/Reversi-start.png").toURI().toURL().toString());
+				"Reversi-start.png").toURI().toString());
 		ImageView imageView2 = new ImageView(image2);
 		gamerulesPane.getChildren().add(imageView2);
         InnerShadow innerShadow = new InnerShadow();
@@ -387,7 +389,7 @@ public class View extends Application {
 		imageView2.setLayoutY(gamerulesPane.getHeight() + 225);
 
 		Image image3 = new Image(new File(
-				"lib/billeder/Reversi-startv2.png").toURI().toURL().toString());
+				"Reversi-startv2.png").toURI().toString());
 		ImageView imageView3 = new ImageView(image3);
         innerShadow.setColor(Color.BLACK);
             innerShadow.setRadius(5);
@@ -440,7 +442,7 @@ public class View extends Application {
 		Scene gamerulesScene = new Scene(gamerulesPane, 800, 600);
 		Gamerules.setScene(gamerulesScene);
 		Image image6 = new Image(new File(
-				"lib/billeder/Adlon3_Amerikansk-Valdnød.jpg").toURI().toURL().toString());
+				"Adlon3_Amerikansk-Valdnød.jpg").toURI().toString());
 		gamerulesPane.setBackground(new Background(new BackgroundImage(image6,
 				BackgroundRepeat.REPEAT,
 				BackgroundRepeat.REPEAT,
@@ -451,7 +453,7 @@ public class View extends Application {
 		Pane gamerulesPane2 = new Pane();
 
 		Image image4 = new Image(new File(
-				"lib/billeder/Reversi-arrows.png").toURI().toURL().toString());
+				"Reversi-arrows.png").toURI().toString());
 		ImageView imageView4 = new ImageView(image4);
         innerShadow.setColor(Color.BLACK);
             innerShadow.setRadius(5);
