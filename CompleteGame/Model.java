@@ -1,4 +1,4 @@
-package completeReversiGame;
+
 
 import javafx.animation.FillTransition;
 import javafx.animation.RotateTransition;
@@ -38,6 +38,7 @@ public class Model {
     static String winner = "";
 
     public static void placePiece(MyButton clickedButton) {
+        // Michelle Mai kodelinje 44-57
 
         // Design of the WHITE piece
         View.whitePiece = new Circle(butSize / 3 - gridSize / 7.5);
@@ -56,6 +57,7 @@ public class Model {
         View.blackPiece.setFill(fadeBlackGrey);
 
         // Adjust the TransitionSpeed
+        // Nikolaj Nguyen kodelinje 61-107
         int tSpeed = 1;
         double rSpeed = 0.40;
 
@@ -105,6 +107,7 @@ public class Model {
     }
 
     // Used for transparent circles to highlight legal moves
+    // Peter Stensig kodelinje 111-448
     public static void placePieceTransparent(MyButton[][] cell, int x, int y) {
 
         double centerX = butSize / 2;
@@ -445,6 +448,7 @@ public class Model {
     }
 
     // Pops up with a little window declaring the winner
+    // Michelle Mai kodelinje 452-498
     public static void winner(Stage winStage) {
         new Winner().start(winStage);
     }

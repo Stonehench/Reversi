@@ -1,4 +1,4 @@
-package completeReversiGame;
+
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -91,6 +91,7 @@ public class View extends Application {
 		timeDisplayBlack = new Label(" Time: 05:00 ");
 
 		// Creates the first column of the menu on the right
+        // Peter Stensig 95-106
 		for (int i = 0; i < Model.gridSize; i++) {
 			if (i == 1) {
 				whiteScore.setPrefSize(Model.windowSize / 4, Model.butSize);
@@ -105,6 +106,7 @@ public class View extends Application {
 				root.add(whiteScore, Model.gridSize, i);
 
 				// Time display for white
+                // Nikolaj Nguyen kodelinje 110-117
 				timeDisplayWhite.setStyle("-fx-background-color: white;"
 						+ " -fx-border-style: solid;"
 						+ " -fx-border-width: 2;"
@@ -114,6 +116,7 @@ public class View extends Application {
 				timeDisplayWhite.setFont(normal);
 				root.add(timeDisplayWhite, Model.gridSize, i - 1);
 
+        // Peter Stensig 120-130
 			} else if (i == 3) {
 				blackScore.setPrefSize(Model.windowSize / 4, Model.butSize);
 				blackScore.setTextFill(Color.WHITE);
@@ -127,6 +130,7 @@ public class View extends Application {
 				root.add(blackScore, Model.gridSize, i);
 
 				// Time display for black
+                // Nikolaj Nguyen kodelinje 134-142
 				timeDisplayBlack.setStyle("-fx-background-color: black;"
 						+ " -fx-border-style: solid;"
 						+ " -fx-border-width: 2;"
@@ -137,6 +141,7 @@ public class View extends Application {
 				timeDisplayBlack.setFont(normal);
 				root.add(timeDisplayBlack, Model.gridSize, i + 1);
 
+                // Peter Stensig kodelinje 145-152
 			} else if (i == 2) {
 				pass.setPrefSize((Model.windowSize / 4) - (Model.gridSize * 2.5),
 						Model.butSize - (Model.gridSize * 2.5)); // Size of the button
@@ -145,6 +150,8 @@ public class View extends Application {
 				pass.setDisable(true);
 				root.add(pass, Model.gridSize, i);
 				GridPane.setConstraints(pass, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
+
+                // Michelle Mai kodelinje 155-164
 			} else if (i == Model.gridSize - 1) {
 
 				// Restart button
@@ -155,6 +162,8 @@ public class View extends Application {
 				restart.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
 				root.add(restart, Model.gridSize, i);
 				GridPane.setConstraints(restart, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
+
+                // Nikolaj Nguyen kodelinje 167-175
 			} else if (i == Model.gridSize - 2) {
 
 				// Mute button
@@ -164,6 +173,8 @@ public class View extends Application {
 				mute.setStyle("-fx-background-radius: 50"); // Gives button smooth edges
 				root.add(mute, Model.gridSize, i);
 				GridPane.setConstraints(mute, Model.gridSize, i, 1, 1, HPos.CENTER, VPos.CENTER);
+
+                // Christoffer Frost kodelinje 178-193
 			} else if (i == Model.gridSize - 3) {
 
 				// back button
@@ -182,6 +193,9 @@ public class View extends Application {
 			}
 
 		}
+
+        // Creates the second column of the menu on the right
+        // Peter Stensig kodelinje 199-227
 		for (int i = 0; i < Model.gridSize; i++) {
 			if (i == 1) {
 				whiteWinCounter.setBoundsType(TextBoundsType.VISUAL);
@@ -212,6 +226,7 @@ public class View extends Application {
 			}
 		}
 		// Construction the 8x8 Grid with 64 buttons
+        // Christoffer Frost kodelinje 230-248
 		for (int row = 0; row < Model.gridSize; row++) {
 			for (int column = 0; column < Model.gridSize; column++) {
 				MyButton myButton = new MyButton(0);
@@ -219,12 +234,12 @@ public class View extends Application {
 
 				// Background
 				if (column % 2 == 0 && row % 2 == 0) {
-					myButton.setStyle("-fx-base: #8B4513");
+					myButton.setStyle("-fx-base: #8B4513"); // Button color 1
 				} else {
-					myButton.setStyle("-fx-base: #D2B48C;");
+					myButton.setStyle("-fx-base: #D2B48C;"); // Button color 2
 				}
 				if (column % 2 != 0 && row % 2 != 0) {
-					myButton.setStyle("-fx-base: #8B4513");
+					myButton.setStyle("-fx-base: #8B4513"); // Button color 1
 				}
 
 				root.add(myButton, row, column);
@@ -236,6 +251,7 @@ public class View extends Application {
 		Model.startFour();
 
 		// Constructs background
+        // Christoffer Frost kodelinje 255-264
 		Image image5 = new Image(new File(
 				"Adlon3_Amerikansk-Valdnød.jpg").toURI().toString());
 		root.setBackground(new Background(new BackgroundImage(image5,
@@ -252,6 +268,7 @@ public class View extends Application {
 	// Stage setup
 	@Override
 	public void start(Stage primaryStage) throws MalformedURLException {
+        // Christoffer Frost kodelinje 272-538
 		Image image = new Image(new File(
 				"reversi-game.jpg").toURI().toString());
 		ImageView imageView = new ImageView(image);
@@ -521,6 +538,7 @@ public class View extends Application {
 		primaryStage.setResizable(false);
 
 		// Time counter speed-settings:
+        // Nikolaj Nguyen kodelinje 542-607
 		double countSpeedRate = 1; // 1 = normal, 0.05 = fast, 2 = slow
 
 		// Create a TimeLine for white

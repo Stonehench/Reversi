@@ -1,4 +1,4 @@
-package completeReversiGame;
+
 
 import java.io.File;
 
@@ -16,6 +16,7 @@ public class Controller {
         View.backgroundMusik = new MediaPlayer(View.media);
 
         // On-click action for mute: Mute all sound FX
+        // Nikolaj Nguyen kodelinje 20-60
         View.mute.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -32,7 +33,7 @@ public class Controller {
             }
         });
         // Adds all the functionality for when a button is clicked
-        for (int x = 0; x < Model.gridSize; x++) {
+        for (int x = 0; x < Model.gridSize; x++) { // NN
             for (int y = 0; y < Model.gridSize; y++) {
                 View.buttons2D[x][y].setOnAction(new EventHandler<ActionEvent>() {
 
@@ -58,6 +59,7 @@ public class Controller {
                                 View.blackTimeLine.stop();
                             }
                             // Whites turn
+                            // Peter Stensig kodelinje 63-85
                             else if (Model.clickCount % 2 != 0) {
                                 View.whiteScore.setFont(View.bold);
                                 View.blackScore.setFont(View.normal);
@@ -83,6 +85,7 @@ public class Controller {
                             }
 
                             // SoundFX every time you make a "Legal" move.
+                            // Christoffer Frost kodelinje 86-111
                             View.media = new Media(new File("Reversi-game-sound.wav").toURI().toString());
                             View.legalMoveSound = new MediaPlayer(View.media);
                             View.legalMoveSound.setVolume(0.1);
@@ -99,6 +102,7 @@ public class Controller {
 
                         } else {
                             // SoundFX every time you make a "Illegal" move.
+                           
                             View.media = new Media(new File("Sounds_whoosh.mp3").toURI().toString());
                             View.IllegalMoveSound = new MediaPlayer(View.media);
                             View.IllegalMoveSound.setVolume(0.1);
@@ -124,6 +128,7 @@ public class Controller {
         } // Outer loop end
 
         // Pass button
+        // Peter Stensig kodelinje 130-147
         View.pass.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
@@ -143,14 +148,15 @@ public class Controller {
             }
         });
 
-        // Restart button
+        // Restart button 
+        // Michelle Mai kodelinje 151-156
         View.restart.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
                 Model.restartGame(View.buttons2D);
             }
         });
-
+        // Christoffer Frost kodelinje 158-211
         View.Next.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override

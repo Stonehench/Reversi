@@ -1,7 +1,8 @@
-package completeReversiGame;
+
 
 import javafx.scene.control.Button;
 
+// Peter Stensig kodelinje 6-23
 class MyButton extends Button {
 
 	private int MyValue;

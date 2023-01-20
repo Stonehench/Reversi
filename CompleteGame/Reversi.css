@@ -1,7 +1,12 @@
-.button { -fx-focus-color: firebrick; }
-.button{
+/* Peter Stensig kodelinje 2-12 */
+.button {
+    -fx-focus-color: firebrick;
+}
+
+.button {
     -fx-background-radius: 0;
-    }
+}
+
 .label {
-    -fx-alignment:center;
+    -fx-alignment: center;
 }

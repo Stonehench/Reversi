@@ -1,4 +1,4 @@
-package completeReversiGame;
+
 
 import java.io.File;
 
@@ -24,6 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+    // Michelle Mai kodelinje 28-113
 public class Winner extends Application{
 
 	public static Button backToMenu2 = new Button();
